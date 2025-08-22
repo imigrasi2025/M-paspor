@@ -476,6 +476,7 @@ flex-direction: column;
 <div class="region-tab" onclick="selectRegion('jatim')">Jawa Timur</div>
 <div class="region-tab" onclick="selectRegion('sumatera')">Sumatera</div>
 <div class="region-tab" onclick="selectRegion('batam')">Batam</div>
+<div class="region-tab" onclick="selectRegion('bali_ntb')">Bali & NTB</div>
 </div>
 <!-- Location Grid -->
 <div class="form-group">
@@ -795,6 +796,22 @@ const locationData = {
             phone: '(0778) 761234',
             hours: '08:00 - 16:00'
         }
+    ],
+    bali_ntb: [
+        {
+            id: 'ngurah-rai',
+            name: 'Kantor Imigrasi Kelas I Khusus Ngurah Rai',
+            address: 'Jl. Airport Barat, Tuban, Kuta, Badung, Bali',
+            phone: '(0361) 751038',
+            hours: '08:00 - 16:00'
+        },
+        {
+            id: 'mataram',
+            name: 'Kantor Imigrasi Mataram',
+            address: 'Jl. Udayana No. 2, Mataram, Nusa Tenggara Barat',
+            phone: '(0370) 621744',
+            hours: '08:00 - 16:00'
+        }
     ]
 };
 // Initialize page
@@ -805,8 +822,8 @@ document.addEventListener('DOMContentLoaded', function() {
         loadingScreen.style.opacity = '0';
         setTimeout(() => {
             loadingScreen.style.display = 'none';
-        },);
-    300 }, 1000);
+        }, 300);
+    }, 1000);
 });
 // Select region
 function selectRegion(region) {
@@ -912,5 +929,4 @@ window.goToPassport = goToPassport;
 window.goBack = goBack;
 </script>
 </body>
-
 </html>
