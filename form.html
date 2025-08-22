@@ -409,6 +409,45 @@ margin-bottom: 8px;
 font-size: 11px;
 color: var(--success-green);
 }
+/* Time Slot Selection - PERBAIKAN */
+.time-slot-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+gap: 10px;
+margin-top: 16px;
+}
+.time-slot-item {
+padding: 12px 8px;
+border: 2px solid var(--light-gray);
+border-radius: 8px;
+text-align: center;
+cursor: pointer;
+transition: var(--transition);
+background: var(--white);
+}
+.time-slot-item:hover {
+border-color: var(--primary-blue);
+transform: translateY(-2px);
+}
+.time-slot-item.selected {
+border-color: var(--primary-blue);
+background: rgba(30, 64, 175, 0.1);
+}
+.time-slot-item.disabled {
+opacity: 0.5;
+cursor: not-allowed;
+background: var(--light-gray);
+}
+.time-slot-time {
+font-size: 14px;
+font-weight: 600;
+color: var(--dark-text);
+}
+.time-slot-status {
+font-size: 11px;
+color: var(--success-green);
+margin-top: 4px;
+}
 /* Location Selection */
 .location-grid {
 display: grid;
@@ -856,16 +895,10 @@ Persyaratan foto:<br>
 </div>
 <div class="form-group" id="timeSlotGroup" style="display: none;">
 <label class="form-label required">Jam Kedatangan</label>
-<select class="form-select" id="timeSlot">
-<option value="">Pilih jam kedatangan</option>
-<option value="08:00">08:00 - 09:00</option>
-<option value="09:00">09:00 - 10:00</option>
-<option value="10:00">10:00 - 11:00</option>
-<option value="11:00">11:00 - 12:00</option>
-<option value="13:00">13:00 - 14:00</option>
-<option value="14:00">14:00 - 15:00</option>
-<option value="15:00">15:00 - 16:00</option>
-</select>
+<!-- PERBAIKAN: Mengganti dropdown dengan grid yang dapat diklik -->
+<div class="time-slot-grid" id="timeSlotGrid">
+<!-- Time slot items will be populated by JavaScript -->
+</div>
 </div>
 <div class="btn-group">
 <button type="button" class="btn btn-secondary" onclick="previousStep(3)">Kembali</button>
@@ -895,7 +928,6 @@ Persyaratan foto:<br>
 </form>
 </div>
 </div>
-
 <script>
 // Function to navigate to the next step
 function nextStep(currentStep) {
@@ -913,12 +945,16 @@ function nextStep(currentStep) {
     // Update progress bar
     updateProgressBar(currentStep + 1);
     
+    // If moving to step 3 (Schedule), load schedule data
+    if (currentStep + 1 === 3) {
+        initializeScheduleGrid();
+    }
+    
     // If moving to step 4 (Location), load location data
     if (currentStep + 1 === 4) {
         loadLocations();
     }
 }
-
 // Function to navigate to the previous step
 function previousStep(currentStep) {
     // Hide current step
@@ -930,7 +966,6 @@ function previousStep(currentStep) {
     // Update progress bar
     updateProgressBar(currentStep - 1);
 }
-
 // Function to update progress bar
 function updateProgressBar(step) {
     const progressBarFill = document.getElementById('progressBarFill');
@@ -951,7 +986,6 @@ function updateProgressBar(step) {
         }
     }
 }
-
 // Function to validate current step
 function validateStep(step) {
     let isValid = true;
@@ -1004,9 +1038,9 @@ function validateStep(step) {
     } else if (step === 3) {
         // Validate schedule
         const selectedDate = document.querySelector('.schedule-item.selected');
-        const timeSlot = document.getElementById('timeSlot').value;
+        const selectedTime = document.querySelector('.time-slot-item.selected');
         
-        if (!selectedDate || !timeSlot) {
+        if (!selectedDate || !selectedTime) {
             isValid = false;
             alert('Harap pilih tanggal dan jam kedatangan');
         }
@@ -1014,7 +1048,6 @@ function validateStep(step) {
     
     return isValid;
 }
-
 // Function to load locations
 function loadLocations() {
     const locationGrid = document.getElementById('locationGrid');
@@ -1070,7 +1103,6 @@ function loadLocations() {
         locationGrid.appendChild(locationItem);
     });
 }
-
 // Function to select a location
 function selectLocation(locationId) {
     // Remove selected class from all location items
@@ -1084,7 +1116,6 @@ function selectLocation(locationId) {
     // Store selected location ID
     document.getElementById('selectedLocation').value = locationId;
 }
-
 // Function to submit the form
 function submitForm() {
     // Validate location selection
@@ -1106,7 +1137,6 @@ function submitForm() {
         window.location.href = 'lokasi.html';
     }, 2000);
 }
-
 // Function to go back to previous step
 function goBackStep() {
     const currentStep = document.querySelector('.step-section.active').id.replace('step', '');
@@ -1114,7 +1144,6 @@ function goBackStep() {
         previousStep(parseInt(currentStep));
     }
 }
-
 // Function to update application fields based on selected application type
 function updateApplicationFields() {
     const applicationType = document.getElementById('applicationType').value;
@@ -1143,7 +1172,6 @@ function updateApplicationFields() {
         additionalFields.classList.add('hidden');
     }
 }
-
 // Function to handle file upload
 function handleFileUpload(fileInputId, previewId) {
     const fileInput = document.getElementById(fileInputId);
@@ -1168,13 +1196,11 @@ function handleFileUpload(fileInputId, previewId) {
         reader.readAsDataURL(file);
     }
 }
-
 // Function to remove uploaded file
 function removeFile(fileInputId, previewId) {
     document.getElementById(fileInputId).value = '';
     document.getElementById(previewId).innerHTML = '';
 }
-
 // Initialize the form
 document.addEventListener('DOMContentLoaded', function() {
     // Hide loading screen
@@ -1182,21 +1208,34 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('loadingScreen').style.display = 'none';
     }, 1500);
     
-    // Initialize schedule grid
-    initializeScheduleGrid();
-    
     // Add hidden input for selected location
     const locationInput = document.createElement('input');
     locationInput.type = 'hidden';
     locationInput.id = 'selectedLocation';
     locationInput.name = 'selectedLocation';
     document.getElementById('registrationForm').appendChild(locationInput);
+    
+    // Add hidden input for selected date
+    const dateInput = document.createElement('input');
+    dateInput.type = 'hidden';
+    dateInput.id = 'selectedDate';
+    dateInput.name = 'selectedDate';
+    document.getElementById('registrationForm').appendChild(dateInput);
+    
+    // Add hidden input for selected time
+    const timeInput = document.createElement('input');
+    timeInput.type = 'hidden';
+    timeInput.id = 'selectedTime';
+    timeInput.name = 'selectedTime';
+    document.getElementById('registrationForm').appendChild(timeInput);
 });
-
 // Function to initialize schedule grid
 function initializeScheduleGrid() {
     const scheduleGrid = document.getElementById('scheduleGrid');
     const today = new Date();
+    
+    // Clear existing schedule items
+    scheduleGrid.innerHTML = '';
     
     // Generate next 7 days
     for (let i = 1; i <= 7; i++) {
@@ -1233,7 +1272,6 @@ function initializeScheduleGrid() {
         scheduleGrid.appendChild(scheduleItem);
     }
 }
-
 // Function to select a schedule date
 function selectSchedule(date) {
     // Remove selected class from all schedule items
@@ -1250,14 +1288,58 @@ function selectSchedule(date) {
     // Show time slot selection
     document.getElementById('timeSlotGroup').style.display = 'block';
     
-    // Add hidden input for selected date if not exists
-    if (!document.getElementById('selectedDate')) {
-        const dateInput = document.createElement('input');
-        dateInput.type = 'hidden';
-        dateInput.id = 'selectedDate';
-        dateInput.name = 'selectedDate';
-        document.getElementById('registrationForm').appendChild(dateInput);
-    }
+    // Initialize time slot grid
+    initializeTimeSlotGrid();
+}
+// PERBAIKAN: Function to initialize time slot grid
+function initializeTimeSlotGrid() {
+    const timeSlotGrid = document.getElementById('timeSlotGrid');
+    
+    // Clear existing time slots
+    timeSlotGrid.innerHTML = '';
+    
+    // Define time slots
+    const timeSlots = [
+        { time: '08:00', display: '08:00 - 09:00' },
+        { time: '09:00', display: '09:00 - 10:00' },
+        { time: '10:00', display: '10:00 - 11:00' },
+        { time: '11:00', display: '11:00 - 12:00' },
+        { time: '13:00', display: '13:00 - 14:00' },
+        { time: '14:00', display: '14:00 - 15:00' },
+        { time: '15:00', display: '15:00 - 16:00' }
+    ];
+    
+    // Add time slot items
+    timeSlots.forEach(slot => {
+        const timeSlotItem = document.createElement('div');
+        timeSlotItem.className = 'time-slot-item';
+        timeSlotItem.onclick = function() {
+            selectTimeSlot(slot.time);
+        };
+        
+        // Random available slots
+        const availableSlots = Math.floor(Math.random() * 10) + 1;
+        
+        timeSlotItem.innerHTML = `
+            <div class="time-slot-time">${slot.display}</div>
+            <div class="time-slot-status">${availableSlots} slot tersedia</div>
+        `;
+        
+        timeSlotGrid.appendChild(timeSlotItem);
+    });
+}
+// PERBAIKAN: Function to select a time slot
+function selectTimeSlot(time) {
+    // Remove selected class from all time slot items
+    document.querySelectorAll('.time-slot-item').forEach(item => {
+        item.classList.remove('selected');
+    });
+    
+    // Add selected class to clicked item
+    event.currentTarget.classList.add('selected');
+    
+    // Store selected time
+    document.getElementById('selectedTime').value = time;
 }
 </script>
 </body>
