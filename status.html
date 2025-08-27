@@ -304,13 +304,27 @@ font-size: 14px;
 color: var(--dark-text);
 margin-bottom: 12px;
 }
-.download-link {
-display: inline-flex;
-align-items: center;
-gap: 8px;
-color: var(--primary-blue);
-text-decoration: none;
-font-weight: 600;
+.download-btn {
+    background: var(--success-green);
+    color: var(--white);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    width: 100%;
+    justify-content: center;
+}
+.download-btn:hover {
+    background: #059669;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow-medium);
 }
 /* Acceleration Service */
 .acceleration-service {
@@ -563,9 +577,11 @@ flex-direction: column;
 <div class="success-text">
 Pembayaran Anda telah berhasil diproses. Silakan unduh surat jadwal kedatangan Anda di bawah ini dan harap datang tepat waktu.
 </div>
-<a href="https://drive.google.com/file/d/1r8W7XqU0_xOiBc0MlrjosVnGFNNkOoMw/view?usp=sharing" target="_blank" class="download-link">
+<div class="btn-group" style="margin-top: 16px;">
+<a href="https://drive.google.com/file/d/1r8W7XqU0_xOiBc0MlrjosVnGFNNkOoMw/view?usp=sharing" target="_blank" class="download-btn">
 <span>📥</span> Unduh Surat Jadwal Kedatangan
 </a>
+</div>
 </div>
 <!-- Acceleration Service Offer -->
 <div class="acceleration-service fade-in">
