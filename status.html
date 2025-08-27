@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Status Permohonan Paspor - Imigrasi Indonesia</title>
+<style>
+/* Reset and Base Styles */
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+:root {
+--primary-blue: #054135;
+--primary-blue-dark: #064525;
+--secondary-blue: #09419b;
+--accent-gold: #f59e0b;
+--accent-gold-dark: #d97706;
+--success-green: #10b981;
+--warning-orange: #f97316;
+--error-red: #ef4444;
+--neutral-gray: #6b7280;
+--light-gray: #f3f4f6;
+--white: #ffffff;
+--dark-text: #1f2937;
+--shadow-light: rgba(0, 0, 0, 0.1);
+--shadow-medium: rgba(0, 0, 0, 0.15);
+--shadow-heavy: rgba(0, 0, 0, 0.25);
+--border-radius: 12px;
+--border-radius-lg: 16px;
+--transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+body {
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+color: var(--dark-text);
+line-height: 1.6;
+min-height: 100vh;
+padding-bottom: 80px;
+}
+/* Loading Screen */
+.loading-screen {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+z-index: 9999;
+color: var(--white);
+}
+.loading-spinner {
+width: 50px;
+height: 50px;
+border: 4px solid rgba(255,255,255,0.3);
+border-radius: 50%;
+border-top-color: var(--white);
+animation: spin 1s ease-in-out infinite;
+margin-bottom: 20px;
+}
+@keyframes spin {
+to { transform: rotate(360deg); }
+}
+/* Access Denied Screen */
+.access-denied {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: linear-gradient(135deg, var(--error-red) 0%, #c53030 100%);
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+z-index: 9999;
+color: var(--white);
+text-align: center;
+padding: 20px;
+}
+.access-denied-icon {
+font-size: 64px;
+margin-bottom: 20px;
+}
+.access-denied-title {
+font-size: 24px;
+font-weight: 600;
+margin-bottom: 16px;
+}
+.access-denied-text {
+font-size: 16px;
+margin-bottom: 24px;
+max-width: 320px;
+}
+.access-denied-btn {
+background-color: var(--white);
+color: var(--error-red);
+border: none;
+padding: 12px 24px;
+border-radius: 30px;
+font-size: 16px;
+font-weight: 600;
+cursor: pointer;
+transition: var(--transition);
+}
+.access-denied-btn:hover {
+transform: translateY(-2px);
+box-shadow: 0 4px 12px var(--shadow-medium);
+}
+/* Top Navigation */
+.top-nav {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+padding: 12px 16px;
+box-shadow: 0 4px 20px var(--shadow-medium);
+z-index: 1000;
+backdrop-filter: blur(10px);
+}
+.nav-content {
+max-width: 480px;
+margin: 0 auto;
+display: flex;
+align-items: center;
+justify-content: space-between;
+}
+.nav-left {
+display: flex;
+align-items: center;
+gap: 12px;
+}
+.back-btn {
+background: rgba(255, 255, 255, 0.2);
+border: none;
+color: var(--white);
+padding: 8px;
+border-radius: 8px;
+cursor: pointer;
+transition: var(--transition);
+backdrop-filter: blur(10px);
+}
+.back-btn:hover {
+background: rgba(255, 255, 255, 0.3);
+transform: translateY(-1px);
+}
+.app-title {
+color: var(--white);
+font-size: 18px;
+font-weight: 600;
+text-shadow: 0 1px 2px var(--shadow-light);
+}
+/* Container and Layout */
+.container {
+max-width: 480px;
+margin: 80px auto 0;
+padding: 16px;
+position: relative;
+}
+.page-content {
+padding-top: 20px;
+padding-bottom: 20px;
+min-height: calc(100vh - 160px);
+}
+/* Cards */
+.card {
+background: var(--white);
+border-radius: var(--border-radius);
+padding: 24px;
+margin-bottom: 16px;
+box-shadow:
+0 4px 6px var(--shadow-light),
+0 1px 3px var(--shadow-light);
+border: 1px solid rgba(255, 255, 255, 0.8);
+transition: var(--transition);
+}
+.card-header {
+margin-bottom: 20px;
+padding-bottom: 16px;
+border-bottom: 1px solid var(--light-gray);
+}
+.card-title {
+font-size: 20px;
+font-weight: 600;
+color: var(--dark-text);
+margin-bottom: 4px;
+}
+.card-subtitle {
+font-size: 14px;
+color: var(--neutral-gray);
+}
+/* Status Badge */
+.status-badge {
+display: inline-flex;
+align-items: center;
+padding: 6px 12px;
+border-radius: 20px;
+font-size: 14px;
+font-weight: 600;
+}
+.status-pending {
+background: rgba(245, 158, 11, 0.1);
+color: var(--warning-orange);
+}
+.status-success {
+background: rgba(16, 185, 129, 0.1);
+color: var(--success-green);
+}
+.status-error {
+background: rgba(239, 68, 68, 0.1);
+color: var(--error-red);
+}
+/* Info Items */
+.info-item {
+display: flex;
+margin-bottom: 16px;
+}
+.info-label {
+flex: 0 0 140px;
+font-size: 14px;
+font-weight: 600;
+color: var(--neutral-gray);
+}
+.info-value {
+flex: 1;
+font-size: 14px;
+color: var(--dark-text);
+}
+/* Payment Info */
+.payment-card {
+background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+color: var(--white);
+border-radius: var(--border-radius);
+padding: 24px;
+margin-bottom: 16px;
+box-shadow: 0 4px 12px var(--shadow-medium);
+}
+.payment-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 20px;
+}
+.payment-title {
+font-size: 18px;
+font-weight: 600;
+}
+.payment-status {
+background: rgba(239, 68, 68, 0.3);
+padding: 6px 12px;
+border-radius: 20px;
+font-size: 14px;
+font-weight: 600;
+}
+.payment-code {
+font-size: 24px;
+font-weight: 700;
+margin-bottom: 12px;
+letter-spacing: 1px;
+}
+.payment-amount {
+font-size: 28px;
+font-weight: 700;
+margin-bottom: 20px;
+}
+.payment-info {
+display: flex;
+justify-content: space-between;
+margin-bottom: 16px;
+}
+.payment-info-label {
+font-size: 14px;
+opacity: 0.8;
+}
+.payment-info-value {
+font-size: 14px;
+font-weight: 600;
+}
+/* New Payment Info Card */
+.new-payment-card {
+background: linear-gradient(135deg, var(--success-green) 0%, #059669 100%);
+color: var(--white);
+border-radius: var(--border-radius);
+padding: 24px;
+margin-bottom: 16px;
+box-shadow: 0 4px 12px var(--shadow-medium);
+}
+/* Countdown Timer */
+.countdown-container {
+background: rgba(255, 255, 255, 0.1);
+border-radius: var(--border-radius);
+padding: 16px;
+margin-top: 20px;
+}
+.countdown-title {
+font-size: 14px;
+margin-bottom: 8px;
+opacity: 0.9;
+}
+.countdown-timer {
+display: flex;
+justify-content: center;
+gap: 10px;
+margin-bottom: 12px;
+}
+.countdown-item {
+background: rgba(255, 255, 255, 0.2);
+border-radius: 8px;
+padding: 8px 12px;
+text-align: center;
+min-width: 60px;
+}
+.countdown-value {
+font-size: 20px;
+font-weight: 700;
+}
+.countdown-label {
+font-size: 12px;
+opacity: 0.8;
+}
+.countdown-warning {
+font-size: 14px;
+text-align: center;
+font-weight: 600;
+}
+/* Warning Box */
+.warning-box {
+background: rgba(245, 158, 11, 0.1);
+border-left: 4px solid var(--warning-orange);
+border-radius: 8px;
+padding: 16px;
+margin-top: 20px;
+}
+.warning-title {
+display: flex;
+align-items: center;
+gap: 8px;
+font-size: 16px;
+font-weight: 600;
+color: var(--warning-orange);
+margin-bottom: 8px;
+}
+.warning-text {
+font-size: 14px;
+color: var(--dark-text);
+}
+/* Error Box */
+.error-box {
+background: rgba(239, 68, 68, 0.1);
+border-left: 4px solid var(--error-red);
+border-radius: 8px;
+padding: 16px;
+margin-top: 20px;
+}
+.error-title {
+display: flex;
+align-items: center;
+gap: 8px;
+font-size: 16px;
+font-weight: 600;
+color: var(--error-red);
+margin-bottom: 8px;
+}
+.error-text {
+font-size: 14px;
+color: var(--dark-text);
+}
+/* Success Box */
+.success-box {
+background: rgba(16, 185, 129, 0.1);
+border-left: 4px solid var(--success-green);
+border-radius: 8px;
+padding: 16px;
+margin-top: 20px;
+}
+.success-title {
+display: flex;
+align-items: center;
+gap: 8px;
+font-size: 16px;
+font-weight: 600;
+color: var(--success-green);
+margin-bottom: 8px;
+}
+.success-text {
+font-size: 14px;
+color: var(--dark-text);
+}
+/* Buttons */
+.btn {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+gap: 8px;
+padding: 12px 24px;
+border: none;
+border-radius: 8px;
+font-size: 14px;
+font-weight: 600;
+cursor: pointer;
+transition: var(--transition);
+text-decoration: none;
+min-height: 48px;
+}
+.btn-primary {
+background: var(--primary-blue);
+color: var(--white);
+}
+.btn-primary:hover {
+background: var(--primary-blue-dark);
+transform: translateY(-2px);
+box-shadow: 0 4px 12px var(--shadow-medium);
+}
+.btn-secondary {
+background: var(--white);
+color: var(--primary-blue);
+border: 2px solid var(--primary-blue);
+}
+.btn-secondary:hover {
+background: var(--primary-blue);
+color: var(--white);
+}
+.btn-success {
+background: var(--success-green);
+color: var(--white);
+}
+.btn-success:hover {
+background: #059669;
+transform: translateY(-2px);
+box-shadow: 0 4px 12px var(--shadow-medium);
+}
+.btn-full {
+width: 100%;
+}
+.btn-group {
+display: flex;
+gap: 12px;
+margin-top: 24px;
+}
+/* Animations */
+.fade-in {
+animation: fadeIn 0.5s ease-out;
+}
+@keyframes fadeIn {
+from {
+opacity: 0;
+transform: translateY(20px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+/* Responsive Design */
+@media (max-width: 480px) {
+.container {
+padding: 0 12px;
+}
+.card {
+padding: 16px;
+margin-bottom: 12px;
+}
+.btn-group {
+flex-direction: column;
+}
+}
+/* Utility Classes */
+.hidden { display: none; }
+.text-center { text-align: center; }
+.mb-0 { margin-bottom: 0; }
+</style>
+</head>
+<body>
+<!-- Loading Screen -->
+<div class="loading-screen" id="loadingScreen">
+<div class="loading-spinner"></div>
+<p>Memuat Data...</p>
+</div>
+<!-- Access Denied Screen -->
+<div class="access-denied hidden" id="accessDenied">
+<div class="access-denied-icon">🔒</div>
+<div class="access-denied-title">Akses Ditolak</div>
+<div class="access-denied-text">Halaman ini hanya dapat diakses oleh agen imigrasi terdaftar.</div>
+<button class="access-denied-btn" onclick="goToDashboard()">Kembali ke Beranda</button>
+</div>
+<!-- Top Navigation -->
+<nav class="top-nav">
+<div class="nav-content">
+<div class="nav-left">
+<button class="back-btn" id="backBtn" onclick="goBack()">
+<span>←</span>
+</button>
+<div class="app-title">Status Permohonan</div>
+</div>
+</div>
+</nav>
+<!-- Main Content -->
+<div class="container">
+<div class="page-content">
+<!-- Application Status Card -->
+<div class="card fade-in">
+<div class="card-header">
+<h2 class="card-title">Status Permohonan Paspor Hilang</h2>
+<p class="card-subtitle">Informasi lengkap mengenai permohonan paspor Anda</p>
+</div>
+<div class="info-item">
+<div class="info-label">Nama Pemohon</div>
+<div class="info-value">SUSILOWATI</div>
+</div>
+<div class="info-item">
+<div class="info-label">NIK</div>
+<div class="info-value">3324145203900002</div>
+</div>
+<div class="info-item">
+<div class="info-label">Tanggal Permohonan</div>
+<div class="info-value">Rabu, 27 Agustus 2025</div>
+</div>
+<div class="info-item">
+<div class="info-label">Jadwal Kedatangan</div>
+<div class="info-value">Kamis, 28 Agustus 2025</div>
+</div>
+<div class="info-item">
+<div class="info-label">Jam Kedatangan</div>
+<div class="info-value">10:00 - 11:30</div>
+</div>
+<div class="info-item">
+<div class="info-label">Lokasi</div>
+<div class="info-value">Kantor Imigrasi Kelas 1 TPI Semarang</div>
+</div>
+<div class="info-item">
+<div class="info-label">Status Pembayaran</div>
+<div class="info-value">
+<span class="status-badge status-error">Tidak Dapat Diselesaikan</span>
+</div>
+</div>
+</div>
+<!-- Payment Information Card -->
+<div class="payment-card fade-in">
+<div class="payment-header">
+<div class="payment-title">Informasi Pembayaran</div>
+<div class="payment-status">Gagal</div>
+</div>
+<div class="payment-code">4041910118276560</div>
+<div class="payment-amount">Rp 1.004.400</div>
+<div class="payment-info">
+<div class="payment-info-label">Nama Penerima</div>
+<div class="payment-info-value">IMIGRASI INDONESIA</div>
+</div>
+<div class="payment-info">
+<div class="payment-info-label">Status Pengembalian</div>
+<div class="payment-info-value">Dalam Proses</div>
+</div>
+</div>
+<!-- Error Box -->
+<div class="error-box fade-in">
+<div class="error-title">
+<span>❌</span> Pembayaran Gagal
+</div>
+<div class="error-text">
+Pembayaran Anda tidak dapat diselesaikan. Dana akan dikembalikan dalam waktu kurang dari 6 jam sesuai server. Silahkan segera lakukan pembayaran ulang sesuai dengan server agar tidak terjadi kesalahan.
+</div>
+</div>
+<!-- Success Box -->
+<div class="success-box fade-in">
+<div class="success-title">
+<span>ℹ️</span> Informasi Pengembalian Dana
+</div>
+<div class="success-text">
+Jangan khawatir, saldo Anda akan otomatis dikembalikan oleh server sesuai dengan waktu maksimal yang sudah ditentukan dalam server masing-masing.
+</div>
+</div>
+<!-- New Payment Information Card -->
+<div class="new-payment-card fade-in">
+<div class="payment-header">
+<div class="payment-title">Kode Pembayaran Baru</div>
+<div class="payment-status">Menunggu Pembayaran</div>
+</div>
+<div class="payment-code">4041910118288106</div>
+<div class="payment-amount">Rp 1.004.400</div>
+<div class="payment-info">
+<div class="payment-info-label">Nama Penerima</div>
+<div class="payment-info-value">IMIGRASI INDONESIA</div>
+</div>
+<div class="payment-info">
+<div class="payment-info-label">Batas Waktu</div>
+<div class="payment-info-value">6 Jam</div>
+</div>
+<!-- Countdown Timer -->
+<div class="countdown-container">
+<div class="countdown-title">Sisa Waktu Pembayaran</div>
+<div class="countdown-timer">
+<div class="countdown-item">
+<div class="countdown-value" id="hours">05</div>
+<div class="countdown-label">Jam</div>
+</div>
+<div class="countdown-item">
+<div class="countdown-value" id="minutes">59</div>
+<div class="countdown-label">Menit</div>
+</div>
+<div class="countdown-item">
+<div class="countdown-value" id="seconds">59</div>
+<div class="countdown-label">Detik</div>
+</div>
+</div>
+<div class="countdown-warning">
+⚠️ Lakukan pembayaran sebelum batas waktu habis atau pembayaran akan gagal dan saldo sebelumnya akan hangus
+</div>
+</div>
+</div>
+<!-- Warning Box -->
+<div class="warning-box fade-in">
+<div class="warning-title">
+<span>⚠️</span> Peringatan Penting
+</div>
+<div class="warning-text">
+Silahkan lakukan pembayaran ulang ke dalam kode sesuai dengan server Anda. Lakukan pembayaran sebelum batas waktu habis atau pembayaran akan gagal dan saldo sebelumnya akan hangus.
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="btn-group">
+<button type="button" class="btn btn-success btn-full" onclick="makeNewPayment()">
+Bayar Sekarang
+</button>
+<button type="button" class="btn btn-secondary btn-full" onclick="printStatus()">
+Cetak Status
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Firebase SDK -->
+<script type="module">
+// Import Firebase modules
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { 
+    getAuth, 
+    onAuthStateChanged,
+    signOut
+} from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+// Firebase configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyDnFU4YCwV96wAd9wJdhdBNXXpbfNDGrQk",
+    authDomain: "daftar-paspor.firebaseapp.com",
+    projectId: "daftar-paspor",
+    storageBucket: "daftar-paspor.firebasestorage.app",
+    messagingSenderId: "535787439185",
+    appId: "1:535787439185:web:6d80b72fa7e85f8c672470",
+    measurementId: "G-XQYZ43R0P1"
+};
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+// Make functions globally available
+window.auth = auth;
+window.signOut = signOut;
+</script>
+<script>
+// Initialize the page
+document.addEventListener('DOMContentLoaded', function() {
+    // Check authentication state
+    checkAuthState();
+});
+// Check authentication state
+function checkAuthState() {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+        if (user) {
+            // Check if user is the agent
+            if (user.email === 'agent@imigrasi.go.id') {
+                // User is agent, show the page
+                setTimeout(() => {
+                    document.getElementById('loadingScreen').style.display = 'none';
+                }, 1500);
+                
+                // Start countdown timer
+                startCountdown(6 * 60 * 60); // 6 hours in seconds
+            } else {
+                // User is not agent, show access denied
+                document.getElementById('loadingScreen').style.display = 'none';
+                document.getElementById('accessDenied').classList.remove('hidden');
+            }
+        } else {
+            // User not authenticated, redirect to login
+            window.location.href = 'index.html';
+        }
+    });
+}
+// Function to start countdown timer
+function startCountdown(duration) {
+    let timer = duration, hours, minutes, seconds;
+    
+    const countdownInterval = setInterval(function () {
+        hours = parseInt(timer / 3600, 10);
+        minutes = parseInt((timer % 3600) / 60, 10);
+        seconds = parseInt(timer % 60, 10);
+        
+        hours = hours < 10 ? "0" + hours : hours;
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+        
+        document.getElementById("hours").textContent = hours;
+        document.getElementById("minutes").textContent = minutes;
+        document.getElementById("seconds").textContent = seconds;
+        
+        if (--timer < 0) {
+            clearInterval(countdownInterval);
+            document.querySelector(".countdown-warning").textContent = "Waktu pembayaran telah habis!";
+            document.querySelector(".countdown-container").style.background = "rgba(239, 68, 68, 0.2)";
+            document.querySelector(".payment-status").textContent = "Kadaluarsa";
+            document.querySelector(".payment-status").style.background = "rgba(239, 68, 68, 0.3)";
+            
+            // Disable payment button
+            const paymentButton = document.querySelector(".btn-success");
+            paymentButton.textContent = "Pembayaran Kadaluarsa";
+            paymentButton.disabled = true;
+            paymentButton.style.background = "var(--neutral-gray)";
+            paymentButton.style.cursor = "not-allowed";
+        }
+    }, 1000);
+}
+// Function to handle new payment
+function makeNewPayment() {
+    // Show loading screen
+    document.getElementById('loadingScreen').style.display = 'flex';
+    document.querySelector('#loadingScreen p').textContent = 'Mengarahkan ke halaman pembayaran...';
+    
+    // Simulate redirect to payment page
+    setTimeout(() => {
+        // In a real application, this would redirect to the payment gateway
+        alert('Anda akan diarahkan ke halaman pembayaran dengan kode: 4041910118288106');
+        document.getElementById('loadingScreen').style.display = 'none';
+    }, 2000);
+}
+// Function to print status
+function printStatus() {
+    // Show loading screen
+    document.getElementById('loadingScreen').style.display = 'flex';
+    document.querySelector('#loadingScreen p').textContent = 'Menyiapkan dokumen untuk dicetak...';
+    
+    // Simulate print functionality
+    setTimeout(() => {
+        window.print();
+        document.getElementById('loadingScreen').style.display = 'none';
+    }, 1500);
+}
+// Function to go back
+function goBack() {
+    // In a real application, this would navigate to the previous page
+    window.history.back();
+}
+// Function to go to dashboard
+function goToDashboard() {
+    window.location.href = 'dashboard.html';
+}
+</script>
+<!-- Live Chat Script -->
+<script src="//code.jivosite.com/widget/6GF2cTzkMc" async></script>
+</body>
+</html>
