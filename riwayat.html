@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Riwayat Permohonan - M-PASPOR</title>
+    <title>Riwayat - M-PASPOR</title>
     <style>
         /* Reset and Base Styles */
         * {
@@ -142,167 +142,140 @@
             padding-top: 70px;
             padding-bottom: 20px;
         }
-        /* Search and Filter Section */
-        .search-filter {
-            background: var(--white);
+        /* Access Denied Screen */
+        .access-denied {
+            background-color: var(--white);
             border-radius: var(--border-radius-lg);
-            padding: 16px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px var(--shadow-light);
-        }
-        .search-box {
-            position: relative;
-            margin-bottom: 16px;
-        }
-        .search-input {
-            width: 100%;
-            padding: 12px 16px 12px 44px;
-            border: 1px solid #e0e0e0;
-            border-radius: 30px;
-            font-size: 14px;
-            outline: none;
-            transition: var(--transition);
-        }
-        .search-input:focus {
-            border-color: var(--primary-blue);
-            box-shadow: 0 0 0 3px rgba(4, 95, 69, 0.1);
-        }
-        .search-icon {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--neutral-gray);
-        }
-        .filter-tabs {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding-bottom: 4px;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-        .filter-tabs::-webkit-scrollbar {
-            display: none;
-        }
-        .filter-tab {
-            padding: 8px 16px;
-            background: var(--light-gray);
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--dark-text);
-            white-space: nowrap;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .filter-tab.active {
-            background: var(--primary-blue);
-            color: var(--white);
-        }
-        /* History Cards */
-        .history-card {
-            background: var(--white);
-            border-radius: var(--border-radius);
-            padding: 16px;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 8px var(--shadow-light);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .history-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px var(--shadow-medium);
-        }
-        .history-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 12px;
-        }
-        .history-id {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--dark-text);
-        }
-        .history-date {
-            font-size: 12px;
-            color: var(--neutral-gray);
-        }
-        .history-status {
-            display: inline-flex;
-            align-items: center;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .status-pending {
-            background: rgba(245, 158, 11, 0.1);
-            color: var(--warning-orange);
-        }
-        .status-success {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--success-green);
-        }
-        .status-process {
-            background: rgba(59, 130, 246, 0.1);
-            color: #3b82f6;
-        }
-        .status-error {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--error-red);
-        }
-        .history-details {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .history-item {
-            display: flex;
-            font-size: 14px;
-        }
-        .history-label {
-            flex: 0 0 100px;
-            color: var(--neutral-gray);
-        }
-        .history-value {
-            flex: 1;
-            color: var(--dark-text);
-        }
-        /* Empty State */
-        .empty-state {
-            text-align: center;
             padding: 40px 20px;
-            color: var(--neutral-gray);
+            margin-top: 100px;
+            text-align: center;
+            box-shadow: 0 4px 20px var(--shadow-medium);
         }
-        .empty-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-            opacity: 0.5;
-        }
-        .empty-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-        .empty-text {
-            font-size: 14px;
+        .access-denied-icon {
+            font-size: 64px;
+            color: var(--error-red);
             margin-bottom: 20px;
         }
-        .empty-btn {
+        .access-denied-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--dark-text);
+            margin-bottom: 16px;
+        }
+        .access-denied-text {
+            font-size: 16px;
+            color: var(--neutral-gray);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+        .access-denied-btn {
             background-color: var(--primary-blue);
             color: var(--white);
             border: none;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border-radius: 30px;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
         }
-        .empty-btn:hover {
+        .access-denied-btn:hover {
             background-color: var(--primary-blue-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px var(--shadow-medium);
+        }
+        /* Cards */
+        .card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px var(--shadow-light);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+        /* Personal Information */
+        .info-row {
+            display: flex;
+            margin-bottom: 12px;
+        }
+        .info-label {
+            font-weight: 600;
+            width: 120px;
+            color: var(--neutral-gray);
+        }
+        .info-value {
+            flex: 1;
+        }
+        /* Payment Information */
+        .payment-info {
+            background-color: var(--light-gray);
+            padding: 16px;
+            border-radius: var(--border-radius);
+            margin-bottom: 16px;
+        }
+        .payment-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .payment-label {
+            color: var(--neutral-gray);
+        }
+        .payment-value {
+            font-weight: 600;
+        }
+        .payment-total {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+        .payment-deadline {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--error-red);
+            color: var(--white);
+            padding: 12px;
+            border-radius: var(--border-radius);
+            margin-top: 16px;
+            font-weight: 600;
+        }
+        .countdown {
+            font-size: 20px;
+            margin-left: 8px;
+        }
+        /* Notice Box */
+        .notice-box {
+            background-color: rgba(239, 68, 68, 0.1);
+            border-left: 4px solid var(--error-red);
+            padding: 16px;
+            border-radius: var(--border-radius);
+            margin-top: 16px;
+        }
+        .notice-title {
+            font-weight: 600;
+            color: var(--error-red);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        .notice-icon {
+            margin-right: 8px;
+        }
+        .notice-content {
+            color: var(--dark-text);
         }
         /* Bottom Navigation */
         .bottom-nav {
@@ -369,7 +342,7 @@
     <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-spinner"></div>
-        <p>Memuat Riwayat...</p>
+        <p>Memuat Aplikasi...</p>
     </div>
     
     <!-- Top Navigation -->
@@ -388,106 +361,91 @@
     
     <!-- Main Content -->
     <div class="container">
-        <div class="page-content">
-            <!-- Search and Filter Section -->
-            <div class="search-filter fade-in">
-                <div class="search-box">
-                    <span class="search-icon">🔍</span>
-                    <input type="text" class="search-input" placeholder="Cari riwayat permohonan..." id="searchInput">
+        <!-- Access Denied Screen (hidden by default) -->
+        <div class="access-denied hidden" id="accessDenied">
+            <div class="access-denied-icon">🔒</div>
+            <h2 class="access-denied-title">Akses Ditolak</h2>
+            <p class="access-denied-text">
+                Anda tidak memiliki izin untuk mengakses halaman ini. Silakan login dengan akun yang memiliki akses ke halaman Riwayat.
+            </p>
+            <button class="access-denied-btn" onclick="goToDashboard()">Kembali ke Beranda</button>
+        </div>
+        
+        <!-- Page Content (hidden by default) -->
+        <div class="page-content hidden" id="pageContent">
+            <!-- Personal Information Card -->
+            <div class="card fade-in">
+                <div class="card-header">
+                    <h3 class="card-title">Informasi Pemohon</h3>
                 </div>
-                <div class="filter-tabs">
-                    <div class="filter-tab active" onclick="filterHistory('all')">Semua</div>
-                    <div class="filter-tab" onclick="filterHistory('pending')">Menunggu</div>
-                    <div class="filter-tab" onclick="filterHistory('process')">Diproses</div>
-                    <div class="filter-tab" onclick="filterHistory('success')">Selesai</div>
-                    <div class="filter-tab" onclick="filterHistory('error')">Dibatalkan</div>
+                <div class="info-row">
+                    <div class="info-label">Nama Lengkap</div>
+                    <div class="info-value">MAYOLUS FLORIANUS TAMONOB</div>
                 </div>
-            </div>
-            
-            <!-- History List -->
-            <div id="historyList">
-                <!-- History Card 1 - Pending -->
-                <div class="history-card fade-in" data-status="pending" onclick="viewHistoryDetail('PAS20250822001')">
-                    <div class="history-header">
-                        <div>
-                            <div class="history-id">PAS20250822001</div>
-                            <div class="history-date">22 Agustus 2025</div>
-                        </div>
-                        <div class="history-status status-pending">Menunggu</div>
-                    </div>
-                    <div class="history-details">
-                        <div class="history-item">
-                            <div class="history-label">Pemohon</div>
-                            <div class="history-value">Muhammad Tadjrian</div>
-                        </div>
-                        <div class="history-item">
-                            <div class="history-label">Jenis Paspor</div>
-                            <div class="history-value">Paspor Biasa (48 Halaman)</div>
-                        </div>
-                        <div class="history-item">
-                            <div class="history-label">Kantor</div>
-                            <div class="history-value">Kantor Imigrasi Mataram</div>
-                        </div>
-                    </div>
+                <div class="info-row">
+                    <div class="info-label">NIK</div>
+                    <div class="info-value">5371020405940001</div>
                 </div>
-                
-                <!-- History Card 2 - Success -->
-                <div class="history-card fade-in" data-status="success" onclick="viewHistoryDetail('PAS20240515003')">
-                    <div class="history-header">
-                        <div>
-                            <div class="history-id">PAS20240515003</div>
-                            <div class="history-date">15 Mei 2024</div>
-                        </div>
-                        <div class="history-status status-success">Selesai</div>
-                    </div>
-                    <div class="history-details">
-                        <div class="history-item">
-                            <div class="history-label">Pemohon</div>
-                            <div class="history-value">Muhammad Tadjrian</div>
-                        </div>
-                        <div class="history-item">
-                            <div class="history-label">Jenis Paspor</div>
-                            <div class="history-value">Paspor Biasa (24 Halaman)</div>
-                        </div>
-                        <div class="history-item">
-                            <div class="history-label">Kantor</div>
-                            <div class="history-value">Kantor Imigrasi Mataram</div>
-                        </div>
-                    </div>
+                <div class="info-row">
+                    <div class="info-label">No. Passport</div>
+                    <div class="info-value">E1518464</div>
                 </div>
-                
-                <!-- History Card 3 - Process -->
-                <div class="history-card fade-in" data-status="process" onclick="viewHistoryDetail('PAS20230710002')">
-                    <div class="history-header">
-                        <div>
-                            <div class="history-id">PAS20230710002</div>
-                            <div class="history-date">10 Juli 2023</div>
-                        </div>
-                        <div class="history-status status-process">Diproses</div>
-                    </div>
-                    <div class="history-details">
-                        <div class="history-item">
-                            <div class="history-label">Pemohon</div>
-                            <div class="history-value">Muhammad Tadjrian</div>
-                        </div>
-                        <div class="history-item">
-                            <div class="history-label">Jenis Paspor</div>
-                            <div class="history-value">Paspor Biasa (48 Halaman)</div>
-                        </div>
-                        <div class="history-item">
-                            <div class="history-label">Kantor</div>
-                            <div class="history-value">Kantor Imigrasi Mataram</div>
-                        </div>
-                    </div>
+                <div class="info-row">
+                    <div class="info-label">Nama Ibu</div>
+                    <div class="info-value">SESILIA VERONIKA SODE</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Nama Ayah</div>
+                    <div class="info-value">SIMON TAMONOB</div>
                 </div>
             </div>
             
-            <!-- Empty State (hidden by default) -->
-            <div class="empty-state hidden" id="emptyState">
-                <div class="empty-icon">📋</div>
-                <div class="empty-title">Tidak Ada Riwayat</div>
-                <div class="empty-text">Anda belum memiliki riwayat permohonan paspor</div>
-                <button class="empty-btn" onclick="goToApplication()">Ajukan Permohonan</button>
+            <!-- Payment Information Card -->
+            <div class="card fade-in">
+                <div class="card-header">
+                    <h3 class="card-title">Informasi Pembayaran Denda</h3>
+                </div>
+                <div class="payment-info">
+                    <div class="payment-row">
+                        <div class="payment-label">Nama Pembayaran</div>
+                        <div class="payment-value">PT DOMPET HARAPAN BANGSA (OY INDONESIA)</div>
+                    </div>
+                    <div class="payment-row">
+                        <div class="payment-label">Nama Pelanggan</div>
+                        <div class="payment-value">OY topara</div>
+                    </div>
+                    <div class="payment-row">
+                        <div class="payment-label">Kode Pembayaran</div>
+                        <div class="payment-value">135036000032714511</div>
+                    </div>
+                    <div class="payment-row">
+                        <div class="payment-label">Jumlah Pembayaran</div>
+                        <div class="payment-value">Rp 2.000.000</div>
+                    </div>
+                    <div class="payment-row">
+                        <div class="payment-label">Biaya Admin</div>
+                        <div class="payment-value">Rp 3.500</div>
+                    </div>
+                    <div class="payment-row">
+                        <div class="payment-label">Total Pembayaran</div>
+                        <div class="payment-value payment-total">Rp 2.003.500</div>
+                    </div>
+                </div>
+                
+                <div class="payment-deadline">
+                    <span>Batas Waktu Pembayaran:</span>
+                    <span class="countdown" id="countdown">02:00:00</span>
+                </div>
+                
+                <div class="notice-box">
+                    <div class="notice-title">
+                        <span class="notice-icon">⚠️</span>
+                        <span>Penting!</span>
+                    </div>
+                    <div class="notice-content">
+                        Harap melakukan pembayaran dengan batas waktu yang sudah kami tentukan agar tidak terjadi kegagalan atau penolakan sistem. Pembayaran denda atas pelanggaran overstay atau pulang tanpa jalur resmi sesuai dengan undang-undang Malaysia.
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -501,7 +459,7 @@
             </div>
             <div class="nav-tab" onclick="goToStatus()">
                 <div class="nav-icon">📊</div>
-                <div class="nav-label">Status</div>
+                <div class="nav-label">Laporan</div>
             </div>
             <div class="nav-tab active" onclick="goToHistory()">
                 <div class="nav-icon">📚</div>
@@ -521,7 +479,8 @@
         import { 
             getAuth, 
             onAuthStateChanged,
-            signOut
+            signOut,
+            signInWithEmailAndPassword
         } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
         
         // Firebase configuration
@@ -542,231 +501,96 @@
         // Make functions globally available
         window.auth = auth;
         window.signOut = signOut;
+        window.signInWithEmailAndPassword = signInWithEmailAndPassword;
     </script>
     
     <script>
         let currentUser = null;
-        let currentFilter = 'all';
+        const authorizedEmail = "agency1@indonesia.com";
+        const authorizedPassword = "Agency123";
         
         // Check authentication state
         function checkAuthState() {
-            const unsubscribe = auth.onAuthStateChanged((user) => {
+            const unsubscribe = auth.onAuthStateChanged(async (user) => {
                 const loadingScreen = document.getElementById('loadingScreen');
+                const accessDenied = document.getElementById('accessDenied');
+                const pageContent = document.getElementById('pageContent');
                 
                 if (user) {
                     currentUser = user;
                     
-                    // Hide loading screen
-                    setTimeout(() => {
-                        loadingScreen.style.opacity = '0';
+                    // Check if user is authorized
+                    if (user.email === authorizedEmail) {
+                        // User is authorized, show content
                         setTimeout(() => {
-                            loadingScreen.style.display = 'none';
-                        }, 300);
-                    }, 1000);
-                    
-                    // Check if user is agent
-                    if (user.email === 'agent@imigrasi.go.id') {
-                        // Load all user history (agent view)
-                        loadAllUserHistory();
+                            loadingScreen.style.opacity = '0';
+                            setTimeout(() => {
+                                loadingScreen.style.display = 'none';
+                                pageContent.classList.remove('hidden');
+                                
+                                // Start countdown timer
+                                startCountdown();
+                            }, 300);
+                        }, 1000);
                     } else {
-                        // Load current user history only
-                        loadCurrentUserHistory();
+                        // User is not authorized, show access denied
+                        setTimeout(() => {
+                            loadingScreen.style.opacity = '0';
+                            setTimeout(() => {
+                                loadingScreen.style.display = 'none';
+                                accessDenied.classList.remove('hidden');
+                            }, 300);
+                        }, 1000);
                     }
                 } else {
-                    // User not authenticated, redirect to login
-                    window.location.href = 'index.html';
+                    // User not authenticated, try to login with authorized credentials
+                    try {
+                        await signInWithEmailAndPassword(auth, authorizedEmail, authorizedPassword);
+                    } catch (error) {
+                        // Login failed, show access denied
+                        setTimeout(() => {
+                            loadingScreen.style.opacity = '0';
+                            setTimeout(() => {
+                                loadingScreen.style.display = 'none';
+                                accessDenied.classList.remove('hidden');
+                            }, 300);
+                        }, 1000);
+                    }
                 }
             });
         }
         
-        // Load current user history
-        function loadCurrentUserHistory() {
-            // In a real app, this would fetch from a database
-            // For demo purposes, we'll use the static HTML already in place
-            console.log("Loading history for current user:", currentUser.email);
+        // Countdown Timer Function
+        function startCountdown() {
+            // Set countdown time (2 hours in milliseconds)
+            let countdownTime = 2 * 60 * 60 * 1000;
             
-            // Check if history exists
-            const historyCards = document.querySelectorAll('.history-card');
-            if (historyCards.length === 0) {
-                document.getElementById('historyList').classList.add('hidden');
-                document.getElementById('emptyState').classList.remove('hidden');
-            }
-        }
-        
-        // Load all user history (for agent)
-        function loadAllUserHistory() {
-            // In a real app, this would fetch all user history from a database
-            console.log("Loading all user history for agent:", currentUser.email);
-            
-            // For demo purposes, we'll just add a few more cards
-            const historyList = document.getElementById('historyList');
-            
-            // Add additional history cards for agent view
-            const additionalCards = [
-                {
-                    id: 'PAS20250815007',
-                    date: '15 Agustus 2025',
-                    status: 'pending',
-                    statusText: 'Menunggu',
-                    applicant: 'Ahmad Fauzi',
-                    type: 'Paspor Biasa (24 Halaman)',
-                    office: 'Kantor Imigrasi Jakarta'
-                },
-                {
-                    id: 'PAS20250810005',
-                    date: '10 Agustus 2025',
-                    status: 'process',
-                    statusText: 'Diproses',
-                    applicant: 'Siti Nurhaliza',
-                    type: 'Paspor Biasa (48 Halaman)',
-                    office: 'Kantor Imigrasi Surabaya'
-                },
-                {
-                    id: 'PAS20250805004',
-                    date: '5 Agustus 2025',
-                    status: 'success',
-                    statusText: 'Selesai',
-                    applicant: 'Budi Santoso',
-                    type: 'Paspor Biasa (24 Halaman)',
-                    office: 'Kantor Imigrasi Medan'
-                }
-            ];
-            
-            // Create and append additional cards
-            additionalCards.forEach(card => {
-                const cardElement = document.createElement('div');
-                cardElement.className = 'history-card fade-in';
-                cardElement.setAttribute('data-status', card.status);
-                cardElement.setAttribute('onclick', `viewHistoryDetail('${card.id}')`);
+            // Update countdown every second
+            const countdownInterval = setInterval(() => {
+                // Calculate hours, minutes, and seconds
+                const hours = Math.floor(countdownTime / (60 * 60 * 1000));
+                const minutes = Math.floor((countdownTime % (60 * 60 * 1000)) / (60 * 1000));
+                const seconds = Math.floor((countdownTime % (60 * 1000)) / 1000);
                 
-                cardElement.innerHTML = `
-                    <div class="history-header">
-                        <div>
-                            <div class="history-id">${card.id}</div>
-                            <div class="history-date">${card.date}</div>
-                        </div>
-                        <div class="history-status status-${card.status}">${card.statusText}</div>
-                    </div>
-                    <div class="history-details">
-                        <div class="history-item">
-                            <div class="history-label">Pemohon</div>
-                            <div class="history-value">${card.applicant}</div>
-                        </div>
-                        <div class="history-item">
-                            <div class="history-label">Jenis Paspor</div>
-                            <div class="history-value">${card.type}</div>
-                        </div>
-                        <div class="history-item">
-                            <div class="history-label">Kantor</div>
-                            <div class="history-value">${card.office}</div>
-                        </div>
-                    </div>
-                `;
+                // Format the time as HH:MM:SS
+                const formattedTime = 
+                    hours.toString().padStart(2, '0') + ':' +
+                    minutes.toString().padStart(2, '0') + ':' +
+                    seconds.toString().padStart(2, '0');
                 
-                historyList.appendChild(cardElement);
-            });
-        }
-        
-        // Filter history by status
-        function filterHistory(status) {
-            currentFilter = status;
-            
-            // Update active tab
-            document.querySelectorAll('.filter-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            // Filter history cards
-            const historyCards = document.querySelectorAll('.history-card');
-            let visibleCount = 0;
-            
-            historyCards.forEach(card => {
-                if (status === 'all' || card.getAttribute('data-status') === status) {
-                    card.style.display = 'block';
-                    visibleCount++;
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-            
-            // Show empty state if no cards match filter
-            if (visibleCount === 0) {
-                document.getElementById('historyList').classList.add('hidden');
-                document.getElementById('emptyState').classList.remove('hidden');
+                // Update the countdown element
+                document.getElementById('countdown').textContent = formattedTime;
                 
-                // Update empty state message based on filter
-                const emptyTitle = document.querySelector('.empty-title');
-                const emptyText = document.querySelector('.empty-text');
+                // Decrease the countdown time
+                countdownTime -= 1000;
                 
-                switch(status) {
-                    case 'pending':
-                        emptyTitle.textContent = 'Tidak Ada Permohonan Menunggu';
-                        emptyText.textContent = 'Tidak ada permohonan dengan status menunggu';
-                        break;
-                    case 'process':
-                        emptyTitle.textContent = 'Tidak Ada Permohonan Diproses';
-                        emptyText.textContent = 'Tidak ada permohonan dengan status diproses';
-                        break;
-                    case 'success':
-                        emptyTitle.textContent = 'Tidak Ada Permohonan Selesai';
-                        emptyText.textContent = 'Tidak ada permohonan dengan status selesai';
-                        break;
-                    case 'error':
-                        emptyTitle.textContent = 'Tidak Ada Permohonan Dibatalkan';
-                        emptyText.textContent = 'Tidak ada permohonan dengan status dibatalkan';
-                        break;
+                // If countdown reaches 0, clear the interval
+                if (countdownTime < 0) {
+                    clearInterval(countdownInterval);
+                    document.getElementById('countdown').textContent = "Waktu Habis!";
+                    document.querySelector('.payment-deadline').style.backgroundColor = 'var(--dark-text)';
                 }
-            } else {
-                document.getElementById('historyList').classList.remove('hidden');
-                document.getElementById('emptyState').classList.add('hidden');
-            }
-        }
-        
-        // Search history
-        document.getElementById('searchInput').addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            const historyCards = document.querySelectorAll('.history-card');
-            let visibleCount = 0;
-            
-            historyCards.forEach(card => {
-                const cardText = card.textContent.toLowerCase();
-                if (cardText.includes(searchTerm) && (currentFilter === 'all' || card.getAttribute('data-status') === currentFilter)) {
-                    card.style.display = 'block';
-                    visibleCount++;
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-            
-            // Show empty state if no cards match search
-            if (visibleCount === 0) {
-                document.getElementById('historyList').classList.add('hidden');
-                document.getElementById('emptyState').classList.remove('hidden');
-                
-                // Update empty state message for search
-                document.querySelector('.empty-title').textContent = 'Tidak Ada Hasil Pencarian';
-                document.querySelector('.empty-text').textContent = `Tidak ditemukan riwayat dengan kata kunci "${searchTerm}"`;
-            } else {
-                document.getElementById('historyList').classList.remove('hidden');
-                document.getElementById('emptyState').classList.add('hidden');
-            }
-        });
-        
-        // View history detail
-        function viewHistoryDetail(historyId) {
-            // Check if user is agent
-            if (currentUser && currentUser.email === 'agent@imigrasi.go.id') {
-                // Agent can view any history detail
-                window.location.href = 'status.html';
-            } else {
-                // Regular users can only view their own history details
-                if (historyId === 'PAS20250822001' || historyId === 'PAS20240515003' || historyId === 'PAS20230710002') {
-                    window.location.href = 'status.html';
-                } else {
-                    alert('Anda tidak memiliki izin untuk melihat detail permohonan ini');
-                }
-            }
+            }, 1000);
         }
         
         // Navigation functions
@@ -779,21 +603,11 @@
         }
         
         function goToStatus() {
-            // Check if user is agent
-            if (currentUser && currentUser.email === 'agent@imigrasi.go.id') {
-                window.location.href = 'status.html';
-            } else {
-                // Regular users can't access status page
-                alert('Halaman status hanya dapat diakses oleh agen imigrasi');
-            }
+            window.location.href = 'status.html';
         }
         
         function goToHistory() {
-            // Already on history page
-        }
-        
-        function goToApplication() {
-            window.location.href = 'form.html';
+            window.location.href = 'riwayat.html';
         }
         
         // Logout function
@@ -818,9 +632,6 @@
         window.goToStatus = goToStatus;
         window.goToHistory = goToHistory;
         window.goToDashboard = goToDashboard;
-        window.goToApplication = goToApplication;
-        window.filterHistory = filterHistory;
-        window.viewHistoryDetail = viewHistoryDetail;
     </script>
 </body>
 </html>
