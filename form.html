@@ -448,64 +448,6 @@ font-size: 11px;
 color: var(--success-green);
 margin-top: 4px;
 }
-/* Location Selection */
-.location-grid {
-display: grid;
-grid-template-columns: 1fr;
-gap: 12px;
-margin-top: 16px;
-}
-.location-item {
-display: flex;
-align-items: flex-start;
-gap: 16px;
-padding: 16px;
-border: 2px solid var(--light-gray);
-border-radius: 8px;
-cursor: pointer;
-transition: var(--transition);
-background: var(--white);
-}
-.location-item:hover {
-border-color: var(--primary-blue);
-transform: translateX(4px);
-}
-.location-item.selected {
-border-color: var(--primary-blue);
-background: rgba(30, 64, 175, 0.05);
-}
-.location-icon {
-width: 48px;
-height: 48px;
-background: var(--primary-blue);
-border-radius: 50%;
-display: flex;
-align-items: center;
-justify-content: center;
-color: var(--white);
-font-size: 20px;
-flex-shrink: 0;
-}
-.location-info {
-flex: 1;
-}
-.location-name {
-font-size: 16px;
-font-weight: 600;
-color: var(--dark-text);
-margin-bottom: 4px;
-}
-.location-address {
-font-size: 14px;
-color: var(--neutral-gray);
-margin-bottom: 8px;
-}
-.location-details {
-display: flex;
-gap: 16px;
-font-size: 12px;
-color: var(--neutral-gray);
-}
 /* Buttons */
 .btn {
 display: inline-flex;
@@ -646,7 +588,7 @@ flex-direction: column;
 <!-- Progress Bar -->
 <div class="progress-container">
 <div class="progress-bar">
-<div class="progress-bar-fill" id="progressBarFill" style="width: 25%;"></div>
+<div class="progress-bar-fill" id="progressBarFill" style="width: 33.33%;"></div>
 <div class="progress-step active" id="step1Indicator">
 <div class="progress-step-circle">1</div>
 <div class="progress-step-label">Data Pribadi</div>
@@ -658,10 +600,6 @@ flex-direction: column;
 <div class="progress-step" id="step3Indicator">
 <div class="progress-step-circle">3</div>
 <div class="progress-step-label">Jadwal</div>
-</div>
-<div class="progress-step" id="step4Indicator">
-<div class="progress-step-circle">4</div>
-<div class="progress-step-label">Lokasi</div>
 </div>
 </div>
 </div>
@@ -902,26 +840,7 @@ Persyaratan foto:<br>
 </div>
 <div class="btn-group">
 <button type="button" class="btn btn-secondary" onclick="previousStep(3)">Kembali</button>
-<button type="button" class="btn btn-primary" onclick="nextStep(3)">Lanjut ke Lokasi</button>
-</div>
-</div>
-</div>
-<!-- Step 4: Location -->
-<div class="step-section" id="step4">
-<div class="card fade-in">
-<div class="card-header">
-<h2 class="card-title">Pilih Lokasi</h2>
-<p class="card-subtitle">Pilih kantor imigrasi untuk pengurusan paspor</p>
-</div>
-<div class="form-group">
-<label class="form-label required">Kantor Imigrasi</label>
-<div class="location-grid" id="locationGrid">
-<!-- Location items will be populated by JavaScript -->
-</div>
-</div>
-<div class="btn-group">
-<button type="button" class="btn btn-secondary" onclick="previousStep(4)">Kembali</button>
-<button type="button" class="btn btn-primary" onclick="submitForm()">Kirim Pendaftaran</button>
+<button type="button" class="btn btn-primary" onclick="submitForm()">Pilih Lokasi & Kirim</button>
 </div>
 </div>
 </div>
@@ -949,11 +868,6 @@ function nextStep(currentStep) {
     if (currentStep + 1 === 3) {
         initializeScheduleGrid();
     }
-    
-    // If moving to step 4 (Location), load location data
-    if (currentStep + 1 === 4) {
-        loadLocations();
-    }
 }
 // Function to navigate to the previous step
 function previousStep(currentStep) {
@@ -969,11 +883,11 @@ function previousStep(currentStep) {
 // Function to update progress bar
 function updateProgressBar(step) {
     const progressBarFill = document.getElementById('progressBarFill');
-    const progressPercentage = (step / 4) * 100;
+    const progressPercentage = (step / 3) * 100; // Updated to 3 steps
     progressBarFill.style.width = `${progressPercentage}%`;
     
     // Update step indicators
-    for (let i = 1; i <= 4; i++) {
+    for (let i = 1; i <= 3; i++) { // Updated to 3 steps
         const stepIndicator = document.getElementById(`step${i}Indicator`);
         if (i < step) {
             stepIndicator.classList.add('completed');
@@ -1048,80 +962,14 @@ function validateStep(step) {
     
     return isValid;
 }
-// Function to load locations
-function loadLocations() {
-    const locationGrid = document.getElementById('locationGrid');
-    
-    // Sample location data
-    const locations = [
-        {
-            id: 1,
-            name: 'Kantor Imigrasi Jakarta Selatan',
-            address: 'Jl. Kartini No. 5, Cilandak, Jakarta Selatan',
-            distance: '5.2 km',
-            operatingHours: '08:00 - 16:00'
-        },
-        {
-            id: 2,
-            name: 'Kantor Imigrasi Jakarta Pusat',
-            address: 'Jl. Kramat Raya No. 8, Senen, Jakarta Pusat',
-            distance: '8.7 km',
-            operatingHours: '08:00 - 16:00'
-        },
-        {
-            id: 3,
-            name: 'Kantor Imigrasi Jakarta Barat',
-            address: 'Jl. Daan Mogot No. 42, Kebon Jeruk, Jakarta Barat',
-            distance: '12.3 km',
-            operatingHours: '08:00 - 16:00'
-        }
-    ];
-    
-    // Clear existing locations
-    locationGrid.innerHTML = '';
-    
-    // Add location items
-    locations.forEach(location => {
-        const locationItem = document.createElement('div');
-        locationItem.className = 'location-item';
-        locationItem.onclick = function() {
-            selectLocation(location.id);
-        };
-        
-        locationItem.innerHTML = `
-            <div class="location-icon">🏢</div>
-            <div class="location-info">
-                <div class="location-name">${location.name}</div>
-                <div class="location-address">${location.address}</div>
-                <div class="location-details">
-                    <span>📍 ${location.distance}</span>
-                    <span>🕒 ${location.operatingHours}</span>
-                </div>
-            </div>
-        `;
-        
-        locationGrid.appendChild(locationItem);
-    });
-}
-// Function to select a location
-function selectLocation(locationId) {
-    // Remove selected class from all location items
-    document.querySelectorAll('.location-item').forEach(item => {
-        item.classList.remove('selected');
-    });
-    
-    // Add selected class to clicked item
-    event.currentTarget.classList.add('selected');
-    
-    // Store selected location ID
-    document.getElementById('selectedLocation').value = locationId;
-}
 // Function to submit the form
 function submitForm() {
-    // Validate location selection
-    const selectedLocation = document.querySelector('.location-item.selected');
-    if (!selectedLocation) {
-        alert('Harap pilih lokasi kantor imigrasi');
+    // Validate schedule selection
+    const selectedDate = document.querySelector('.schedule-item.selected');
+    const selectedTime = document.querySelector('.time-slot-item.selected');
+    
+    if (!selectedDate || !selectedTime) {
+        alert('Harap pilih tanggal dan jam kedatangan');
         return;
     }
     
@@ -1207,13 +1055,6 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => {
         document.getElementById('loadingScreen').style.display = 'none';
     }, 1500);
-    
-    // Add hidden input for selected location
-    const locationInput = document.createElement('input');
-    locationInput.type = 'hidden';
-    locationInput.id = 'selectedLocation';
-    locationInput.name = 'selectedLocation';
-    document.getElementById('registrationForm').appendChild(locationInput);
     
     // Add hidden input for selected date
     const dateInput = document.createElement('input');
