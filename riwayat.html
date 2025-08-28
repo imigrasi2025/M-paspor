@@ -241,40 +241,40 @@
             font-weight: 700;
             color: var(--primary-blue);
         }
-        .payment-deadline {
+        .payment-status {
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: var(--error-red);
+            background-color: var(--success-green);
             color: var(--white);
             padding: 12px;
             border-radius: var(--border-radius);
             margin-top: 16px;
             font-weight: 600;
         }
-        .countdown {
-            font-size: 20px;
-            margin-left: 8px;
+        .status-icon {
+            font-size: 24px;
+            margin-right: 8px;
         }
-        /* Notice Box */
-        .notice-box {
-            background-color: rgba(239, 68, 68, 0.1);
-            border-left: 4px solid var(--error-red);
+        /* Success Box */
+        .success-box {
+            background-color: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid var(--success-green);
             padding: 16px;
             border-radius: var(--border-radius);
             margin-top: 16px;
         }
-        .notice-title {
+        .success-title {
             font-weight: 600;
-            color: var(--error-red);
+            color: var(--success-green);
             margin-bottom: 8px;
             display: flex;
             align-items: center;
         }
-        .notice-icon {
+        .success-icon {
             margin-right: 8px;
         }
-        .notice-content {
+        .success-content {
             color: var(--dark-text);
         }
         /* Bottom Navigation */
@@ -432,18 +432,20 @@
                     </div>
                 </div>
                 
-                <div class="payment-deadline">
-                    <span>Batas Waktu Pembayaran:</span>
-                    <span class="countdown" id="countdown">02:00:00</span>
+                <!-- Payment Status - Changed from deadline to success -->
+                <div class="payment-status">
+                    <span class="status-icon">✓</span>
+                    <span>Pembayaran Berhasil</span>
                 </div>
                 
-                <div class="notice-box">
-                    <div class="notice-title">
-                        <span class="notice-icon">⚠️</span>
-                        <span>Penting!</span>
+                <!-- Success Notice - Changed from warning to success -->
+                <div class="success-box">
+                    <div class="success-title">
+                        <span class="success-icon">✓</span>
+                        <span>Pembayaran Berhasil</span>
                     </div>
-                    <div class="notice-content">
-                        Harap melakukan pembayaran dengan batas waktu yang sudah kami tentukan agar tidak terjadi kegagalan atau penolakan sistem. Pembayaran denda atas pelanggaran overstay atau pulang tanpa jalur resmi sesuai dengan undang-undang Malaysia.
+                    <div class="success-content">
+                        Pembayaran denda atas pelanggaran overstay atau pulang tanpa jalur resmi sesuai dengan undang-undang Malaysia telah berhasil dilakukan. Terima kasih atas kepatuhan Anda.
                     </div>
                 </div>
             </div>
@@ -527,9 +529,6 @@
                             setTimeout(() => {
                                 loadingScreen.style.display = 'none';
                                 pageContent.classList.remove('hidden');
-                                
-                                // Start countdown timer
-                                startCountdown();
                             }, 300);
                         }, 1000);
                     } else {
@@ -558,39 +557,6 @@
                     }
                 }
             });
-        }
-        
-        // Countdown Timer Function
-        function startCountdown() {
-            // Set countdown time (2 hours in milliseconds)
-            let countdownTime = 2 * 60 * 60 * 1000;
-            
-            // Update countdown every second
-            const countdownInterval = setInterval(() => {
-                // Calculate hours, minutes, and seconds
-                const hours = Math.floor(countdownTime / (60 * 60 * 1000));
-                const minutes = Math.floor((countdownTime % (60 * 60 * 1000)) / (60 * 1000));
-                const seconds = Math.floor((countdownTime % (60 * 1000)) / 1000);
-                
-                // Format the time as HH:MM:SS
-                const formattedTime = 
-                    hours.toString().padStart(2, '0') + ':' +
-                    minutes.toString().padStart(2, '0') + ':' +
-                    seconds.toString().padStart(2, '0');
-                
-                // Update the countdown element
-                document.getElementById('countdown').textContent = formattedTime;
-                
-                // Decrease the countdown time
-                countdownTime -= 1000;
-                
-                // If countdown reaches 0, clear the interval
-                if (countdownTime < 0) {
-                    clearInterval(countdownInterval);
-                    document.getElementById('countdown').textContent = "Waktu Habis!";
-                    document.querySelector('.payment-deadline').style.backgroundColor = 'var(--dark-text)';
-                }
-            }, 1000);
         }
         
         // Navigation functions
