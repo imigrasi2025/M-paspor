@@ -1,603 +1,670 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Riwayat - M-PASPOR</title>
-    <style>
-        /* Reset and Base Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        :root {
-            --primary-blue: #045f45;
-            --primary-blue-dark: #046150;
-            --secondary-blue: #044532;
-            --accent-gold: #ffcc00;
-            --accent-gold-dark: #e6b800;
-            --success-green: #10b981;
-            --warning-orange: #f97316;
-            --error-red: #ef4444;
-            --neutral-gray: #6b7280;
-            --light-gray: #f3f4f6;
-            --white: #ffffff;
-            --dark-text: #333333;
-            --shadow-light: rgba(0, 0, 0, 0.1);
-            --shadow-medium: rgba(0, 0, 0, 0.15);
-            --shadow-heavy: rgba(0, 0, 0, 0.25);
-            --border-radius: 8px;
-            --border-radius-lg: 12px;
-            --transition: all 0.3s ease;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f5f5;
-            color: var(--dark-text);
-            line-height: 1.6;
-            min-height: 100vh;
-            padding-bottom: 70px;
-        }
-        /* Loading Screen */
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            color: var(--white);
-        }
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: var(--white);
-            animation: spin 1s ease-in-out infinite;
-            margin-bottom: 20px;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        /* Top Navigation */
-        .top-nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background-color: var(--primary-blue);
-            padding: 12px 16px;
-            box-shadow: 0 2px 10px var(--shadow-medium);
-            z-index: 1000;
-        }
-        .nav-content {
-            max-width: 480px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .logo {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px var(--shadow-light);
-        }
-        .app-title {
-            color: var(--white);
-            font-size: 18px;
-            font-weight: 600;
-        }
-        .nav-actions {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-        .nav-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: var(--white);
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .nav-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-        .user-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--accent-gold);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--white);
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-        }
-        /* Container and Layout */
-        .container {
-            max-width: 480px;
-            margin: 0 auto;
-            padding: 0 16px;
-            position: relative;
-        }
-        .page-content {
-            padding-top: 70px;
-            padding-bottom: 20px;
-        }
-        /* Access Denied Screen */
-        .access-denied {
-            background-color: var(--white);
-            border-radius: var(--border-radius-lg);
-            padding: 40px 20px;
-            margin-top: 100px;
-            text-align: center;
-            box-shadow: 0 4px 20px var(--shadow-medium);
-        }
-        .access-denied-icon {
-            font-size: 64px;
-            color: var(--error-red);
-            margin-bottom: 20px;
-        }
-        .access-denied-title {
-            font-size: 24px;
-            font-weight: 600;
-            color: var(--dark-text);
-            margin-bottom: 16px;
-        }
-        .access-denied-text {
-            font-size: 16px;
-            color: var(--neutral-gray);
-            margin-bottom: 24px;
-            line-height: 1.6;
-        }
-        .access-denied-btn {
-            background-color: var(--primary-blue);
-            color: var(--white);
-            border: none;
-            padding: 12px 24px;
-            border-radius: 30px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .access-denied-btn:hover {
-            background-color: var(--primary-blue-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px var(--shadow-medium);
-        }
-        /* Cards */
-        .card {
-            background: var(--white);
-            border-radius: var(--border-radius);
-            padding: 20px;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 8px var(--shadow-light);
-        }
-        .card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--light-gray);
-        }
-        .card-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--dark-text);
-        }
-        /* Personal Information */
-        .info-row {
-            display: flex;
-            margin-bottom: 12px;
-        }
-        .info-label {
-            font-weight: 600;
-            width: 120px;
-            color: var(--neutral-gray);
-        }
-        .info-value {
-            flex: 1;
-        }
-        /* Payment Information */
-        .payment-info {
-            background-color: var(--light-gray);
-            padding: 16px;
-            border-radius: var(--border-radius);
-            margin-bottom: 16px;
-        }
-        .payment-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-        }
-        .payment-label {
-            color: var(--neutral-gray);
-        }
-        .payment-value {
-            font-weight: 600;
-        }
-        .payment-total {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--primary-blue);
-        }
-        .payment-status {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: var(--success-green);
-            color: var(--white);
-            padding: 12px;
-            border-radius: var(--border-radius);
-            margin-top: 16px;
-            font-weight: 600;
-        }
-        .status-icon {
-            font-size: 24px;
-            margin-right: 8px;
-        }
-        /* Success Box */
-        .success-box {
-            background-color: rgba(16, 185, 129, 0.1);
-            border-left: 4px solid var(--success-green);
-            padding: 16px;
-            border-radius: var(--border-radius);
-            margin-top: 16px;
-        }
-        .success-title {
-            font-weight: 600;
-            color: var(--success-green);
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-        }
-        .success-icon {
-            margin-right: 8px;
-        }
-        .success-content {
-            color: var(--dark-text);
-        }
-        /* Bottom Navigation */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--white);
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
-            box-shadow: 0 -2px 10px var(--shadow-light);
-            z-index: 1000;
-        }
-        .nav-tabs {
-            max-width: 480px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-around;
-            padding: 8px 0;
-        }
-        .nav-tab {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 8px 12px;
-            text-decoration: none;
-            color: var(--neutral-gray);
-            transition: var(--transition);
-            border-radius: 8px;
-            min-width: 60px;
-        }
-        .nav-tab:hover,
-        .nav-tab.active {
-            color: var(--primary-blue);
-        }
-        .nav-icon {
-            font-size: 20px;
-            margin-bottom: 4px;
-        }
-        .nav-label {
-            font-size: 12px;
-            font-weight: 500;
-        }
-        /* Animations */
-        .fade-in {
-            animation: fadeIn 0.5s ease-out;
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        /* Utility Classes */
-        .hidden { display: none; }
-        .text-center { text-align: center; }
-        .mb-0 { margin-bottom: 0; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Status Permohonan Paspor - Imigrasi Indonesia</title>
+<style>
+/* Reset and Base Styles */
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+:root {
+--primary-blue: #054135;
+--primary-blue-dark: #064525;
+--secondary-blue: #09419b;
+--accent-gold: #f59e0b;
+--accent-gold-dark: #d97706;
+--success-green: #10b981;
+--warning-orange: #f97316;
+--error-red: #ef4444;
+--neutral-gray: #6b7280;
+--light-gray: #f3f4f6;
+--white: #ffffff;
+--dark-text: #1f2937;
+--shadow-light: rgba(0, 0, 0, 0.1);
+--shadow-medium: rgba(0, 0, 0, 0.15);
+--shadow-heavy: rgba(0, 0, 0, 0.25);
+--border-radius: 12px;
+--border-radius-lg: 16px;
+--transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+body {
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+color: var(--dark-text);
+line-height: 1.6;
+min-height: 100vh;
+padding-bottom: 80px;
+}
+/* Loading Screen */
+.loading-screen {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+z-index: 9999;
+color: var(--white);
+}
+.loading-spinner {
+width: 50px;
+height: 50px;
+border: 4px solid rgba(255,255,255,0.3);
+border-radius: 50%;
+border-top-color: var(--white);
+animation: spin 1s ease-in-out infinite;
+margin-bottom: 20px;
+}
+@keyframes spin {
+to { transform: rotate(360deg); }
+}
+/* Access Denied Screen */
+.access-denied {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: linear-gradient(135deg, var(--error-red) 0%, #c53030 100%);
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+z-index: 9999;
+color: var(--white);
+text-align: center;
+padding: 20px;
+}
+.access-denied-icon {
+font-size: 64px;
+margin-bottom: 20px;
+}
+.access-denied-title {
+font-size: 24px;
+font-weight: 600;
+margin-bottom: 16px;
+}
+.access-denied-text {
+font-size: 16px;
+margin-bottom: 24px;
+max-width: 320px;
+}
+.access-denied-btn {
+background-color: var(--white);
+color: var(--error-red);
+border: none;
+padding: 12px 24px;
+border-radius: 30px;
+font-size: 16px;
+font-weight: 600;
+cursor: pointer;
+transition: var(--transition);
+}
+.access-denied-btn:hover {
+transform: translateY(-2px);
+box-shadow: 0 4px 12px var(--shadow-medium);
+}
+/* Top Navigation */
+.top-nav {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+padding: 12px 16px;
+box-shadow: 0 4px 20px var(--shadow-medium);
+z-index: 1000;
+backdrop-filter: blur(10px);
+}
+.nav-content {
+max-width: 480px;
+margin: 0 auto;
+display: flex;
+align-items: center;
+justify-content: space-between;
+}
+.nav-left {
+display: flex;
+align-items: center;
+gap: 12px;
+}
+.back-btn {
+background: rgba(255, 255, 255, 0.2);
+border: none;
+color: var(--white);
+padding: 8px;
+border-radius: 8px;
+cursor: pointer;
+transition: var(--transition);
+backdrop-filter: blur(10px);
+}
+.back-btn:hover {
+background: rgba(255, 255, 255, 0.3);
+transform: translateY(-1px);
+}
+.app-title {
+color: var(--white);
+font-size: 18px;
+font-weight: 600;
+text-shadow: 0 1px 2px var(--shadow-light);
+}
+/* Container and Layout */
+.container {
+max-width: 480px;
+margin: 80px auto 0;
+padding: 16px;
+position: relative;
+}
+.page-content {
+padding-top: 20px;
+padding-bottom: 20px;
+min-height: calc(100vh - 160px);
+}
+/* Cards */
+.card {
+background: var(--white);
+border-radius: var(--border-radius);
+padding: 24px;
+margin-bottom: 16px;
+box-shadow:
+0 4px 6px var(--shadow-light),
+0 1px 3px var(--shadow-light);
+border: 1px solid rgba(255, 255, 255, 0.8);
+transition: var(--transition);
+}
+.card-header {
+margin-bottom: 20px;
+padding-bottom: 16px;
+border-bottom: 1px solid var(--light-gray);
+}
+.card-title {
+font-size: 20px;
+font-weight: 600;
+color: var(--dark-text);
+margin-bottom: 4px;
+}
+.card-subtitle {
+font-size: 14px;
+color: var(--neutral-gray);
+}
+/* Status Badge */
+.status-badge {
+display: inline-flex;
+align-items: center;
+padding: 6px 12px;
+border-radius: 20px;
+font-size: 14px;
+font-weight: 600;
+}
+.status-pending {
+background: rgba(245, 158, 11, 0.1);
+color: var(--warning-orange);
+}
+.status-success {
+background: rgba(16, 185, 129, 0.1);
+color: var(--success-green);
+}
+.status-error {
+background: rgba(239, 68, 68, 0.1);
+color: var(--error-red);
+}
+/* Info Items */
+.info-item {
+display: flex;
+margin-bottom: 16px;
+}
+.info-label {
+flex: 0 0 140px;
+font-size: 14px;
+font-weight: 600;
+color: var(--neutral-gray);
+}
+.info-value {
+flex: 1;
+font-size: 14px;
+color: var(--dark-text);
+}
+/* Payment Info */
+.payment-card {
+background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+color: var(--white);
+border-radius: var(--border-radius);
+padding: 24px;
+margin-bottom: 16px;
+box-shadow: 0 4px 12px var(--shadow-medium);
+}
+.payment-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 20px;
+}
+.payment-title {
+font-size: 18px;
+font-weight: 600;
+}
+.payment-status {
+background: rgba(255, 255, 255, 0.2);
+padding: 6px 12px;
+border-radius: 20px;
+font-size: 14px;
+font-weight: 600;
+}
+.payment-code {
+font-size: 24px;
+font-weight: 700;
+margin-bottom: 12px;
+letter-spacing: 1px;
+}
+.payment-amount {
+font-size: 28px;
+font-weight: 700;
+margin-bottom: 20px;
+}
+.payment-info {
+display: flex;
+justify-content: space-between;
+margin-bottom: 16px;
+}
+.payment-info-label {
+font-size: 14px;
+opacity: 0.8;
+}
+.payment-info-value {
+font-size: 14px;
+font-weight: 600;
+}
+/* Countdown Timer */
+.countdown-container {
+background: rgba(255, 255, 255, 0.1);
+border-radius: var(--border-radius);
+padding: 16px;
+margin-top: 20px;
+}
+.countdown-title {
+font-size: 14px;
+margin-bottom: 8px;
+opacity: 0.9;
+}
+.countdown-timer {
+display: flex;
+justify-content: center;
+gap: 10px;
+margin-bottom: 12px;
+}
+.countdown-item {
+background: rgba(255, 255, 255, 0.2);
+border-radius: 8px;
+padding: 8px 12px;
+text-align: center;
+min-width: 60px;
+}
+.countdown-value {
+font-size: 20px;
+font-weight: 700;
+}
+.countdown-label {
+font-size: 12px;
+opacity: 0.8;
+}
+.countdown-warning {
+font-size: 14px;
+text-align: center;
+font-weight: 600;
+}
+/* Warning Box */
+.warning-box {
+background: rgba(245, 158, 11, 0.1);
+border-left: 4px solid var(--warning-orange);
+border-radius: 8px;
+padding: 16px;
+margin-top: 20px;
+}
+.warning-title {
+display: flex;
+align-items: center;
+gap: 8px;
+font-size: 16px;
+font-weight: 600;
+color: var(--warning-orange);
+margin-bottom: 8px;
+}
+.warning-text {
+font-size: 14px;
+color: var(--dark-text);
+}
+/* Buttons */
+.btn {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+gap: 8px;
+padding: 12px 24px;
+border: none;
+border-radius: 8px;
+font-size: 14px;
+font-weight: 600;
+cursor: pointer;
+transition: var(--transition);
+text-decoration: none;
+min-height: 48px;
+}
+.btn-primary {
+background: var(--primary-blue);
+color: var(--white);
+}
+.btn-primary:hover {
+background: var(--primary-blue-dark);
+transform: translateY(-2px);
+box-shadow: 0 4px 12px var(--shadow-medium);
+}
+.btn-secondary {
+background: var(--white);
+color: var(--primary-blue);
+border: 2px solid var(--primary-blue);
+}
+.btn-secondary:hover {
+background: var(--primary-blue);
+color: var(--white);
+}
+.btn-full {
+width: 100%;
+}
+.btn-group {
+display: flex;
+gap: 12px;
+margin-top: 24px;
+}
+/* Animations */
+.fade-in {
+animation: fadeIn 0.5s ease-out;
+}
+@keyframes fadeIn {
+from {
+opacity: 0;
+transform: translateY(20px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+/* Responsive Design */
+@media (max-width: 480px) {
+.container {
+padding: 0 12px;
+}
+.card {
+padding: 16px;
+margin-bottom: 12px;
+}
+.btn-group {
+flex-direction: column;
+}
+}
+/* Utility Classes */
+.hidden { display: none; }
+.text-center { text-align: center; }
+.mb-0 { margin-bottom: 0; }
+</style>
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div class="loading-screen" id="loadingScreen">
-        <div class="loading-spinner"></div>
-        <p>Memuat Aplikasi...</p>
-    </div>
-    
-    <!-- Top Navigation -->
-    <nav class="top-nav">
-        <div class="nav-content">
-            <div class="logo-container">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Logo_Kementrian_Imigrasi_dan_Pemasyarakatan_%282024%29.png/1200px-Logo_Kementrian_Imigrasi_dan_Pemasyarakatan_%282024%29.png" alt="Passport App Logo" class="logo">
-                <div class="app-title">M-PASPOR</div>
-            </div>
-            <div class="nav-actions">
-                <button class="nav-btn" onclick="logout()">Keluar</button>
-                <div class="user-avatar" id="userAvatar" onclick="goToProfile()">U</div>
-            </div>
-        </div>
-    </nav>
-    
-    <!-- Main Content -->
-    <div class="container">
-        <!-- Access Denied Screen (hidden by default) -->
-        <div class="access-denied hidden" id="accessDenied">
-            <div class="access-denied-icon">🔒</div>
-            <h2 class="access-denied-title">Akses Ditolak</h2>
-            <p class="access-denied-text">
-                Anda tidak memiliki izin untuk mengakses halaman ini. Silakan login dengan akun yang memiliki akses ke halaman Riwayat.
-            </p>
-            <button class="access-denied-btn" onclick="goToDashboard()">Kembali ke Beranda</button>
-        </div>
-        
-        <!-- Page Content (hidden by default) -->
-        <div class="page-content hidden" id="pageContent">
-            <!-- Personal Information Card -->
-            <div class="card fade-in">
-                <div class="card-header">
-                    <h3 class="card-title">Informasi Pemohon</h3>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">Nama Lengkap</div>
-                    <div class="info-value">MAYOLUS FLORIANUS TAMONOB</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">NIK</div>
-                    <div class="info-value">5371020405940001</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">No. Passport</div>
-                    <div class="info-value">E1518464</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">Nama Ibu</div>
-                    <div class="info-value">SESILIA VERONIKA SODE</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">Nama Ayah</div>
-                    <div class="info-value">SIMON TAMONOB</div>
-                </div>
-            </div>
-            
-            <!-- Payment Information Card -->
-            <div class="card fade-in">
-                <div class="card-header">
-                    <h3 class="card-title">Informasi Pembayaran Denda</h3>
-                </div>
-                <div class="payment-info">
-                    <div class="payment-row">
-                        <div class="payment-label">Nama Pembayaran</div>
-                        <div class="payment-value">PT DOMPET HARAPAN BANGSA (OY INDONESIA)</div>
-                    </div>
-                    <div class="payment-row">
-                        <div class="payment-label">Nama Pelanggan</div>
-                        <div class="payment-value">OY topara</div>
-                    </div>
-                    <div class="payment-row">
-                        <div class="payment-label">Kode Pembayaran</div>
-                        <div class="payment-value">135036000032714511</div>
-                    </div>
-                    <div class="payment-row">
-                        <div class="payment-label">Jumlah Pembayaran</div>
-                        <div class="payment-value">Rp 2.000.000</div>
-                    </div>
-                    <div class="payment-row">
-                        <div class="payment-label">Biaya Admin</div>
-                        <div class="payment-value">Rp 3.500</div>
-                    </div>
-                    <div class="payment-row">
-                        <div class="payment-label">Total Pembayaran</div>
-                        <div class="payment-value payment-total">Rp 2.003.500</div>
-                    </div>
-                </div>
+<!-- Loading Screen -->
+<div class="loading-screen" id="loadingScreen">
+<div class="loading-spinner"></div>
+<p>Memuat Data...</p>
+</div>
+<!-- Access Denied Screen -->
+<div class="access-denied hidden" id="accessDenied">
+<div class="access-denied-icon">🔒</div>
+<div class="access-denied-title">Akses Ditolak</div>
+<div class="access-denied-text">Halaman ini hanya dapat diakses oleh agen imigrasi terdaftar.</div>
+<button class="access-denied-btn" onclick="goToDashboard()">Kembali ke Beranda</button>
+</div>
+<!-- Top Navigation -->
+<nav class="top-nav">
+<div class="nav-content">
+<div class="nav-left">
+<button class="back-btn" id="backBtn" onclick="goBack()">
+<span>←</span>
+</button>
+<div class="app-title">Status Permohonan</div>
+</div>
+</div>
+</nav>
+<!-- Main Content -->
+<div class="container">
+<div class="page-content">
+<!-- Application Status Card -->
+<div class="card fade-in">
+<div class="card-header">
+<h2 class="card-title">Status Permohonan Paspor Hilang</h2>
+<p class="card-subtitle">Informasi lengkap mengenai permohonan paspor Anda</p>
+</div>
+<div class="info-item">
+<div class="info-label">Nama Pemohon</div>
+<div class="info-value">MAYOLUS FLORIANUS TAMONOB</div>
+</div>
+<div class="info-item">
+<div class="info-label">NIK</div>
+<div class="info-value">5371020405940001</div>
+</div>
+<div class="info-item">
+<div class="info-label">Tanggal Permohonan</div>
+<div class="info-value">Jum'at, 29 Agustus 2025</div>
+</div>
+<div class="info-item">
+<div class="info-label">Jadwal Kedatangan</div>
+<div class="info-value">Jum'at, 29 Agustus 2025</div>
+</div>
+<div class="info-item">
+<div class="info-label">Jam Kedatangan</div>
+<div class="info-value">11:00 - 11:30</div>
+</div>
+<div class="info-item">
+<div class="info-label">Lokasi</div>
+<div class="info-value">Kantor Imigrasi Kelas 1 TPI Malang</div>
+</div>
+<div class="info-item">
+<div class="info-label">Status Pembayaran</div>
+<div class="info-value">
+<span class="status-badge status-pending">Menunggu</span>
+</div>
+</div>
+</div>
+<!-- Payment Information Card -->
+<div class="payment-card fade-in">
+<div class="payment-header">
+<div class="payment-title">Informasi Pembayaran</div>
+<div class="payment-status">Menunggu Pembayaran</div>
+</div>
+<div class="payment-code">135036000032715202</div>
+<div class="payment-amount">Rp 1.503.500</div>
+<div class="payment-info">
+<div class="payment-info-label">Nama Penerima</div>
+<div class="payment-info-value">PT OY INDONESIA bekerjasama dengan IMIGRASI INDONESIA</div>
+</div>
+<div class="payment-info">
+<div class="payment-info-label">Batas Waktu</div>
+<div class="payment-info-value">2 Jam</div>
+</div>
+<!-- Countdown Timer -->
+<div class="countdown-container">
+<div class="countdown-title">Sisa Waktu Pembayaran</div>
+<div class="countdown-timer">
+<div class="countdown-item">
+<div class="countdown-value" id="hours">01</div>
+<div class="countdown-label">Jam</div>
+</div>
+<div class="countdown-item">
+<div class="countdown-value" id="minutes">59</div>
+<div class="countdown-label">Menit</div>
+</div>
+<div class="countdown-item">
+<div class="countdown-value" id="seconds">59</div>
+<div class="countdown-label">Detik</div>
+</div>
+</div>
+<div class="countdown-warning">
+⚠️ Segera lakukan pembayaran denda paspor hilang sebelum waktu habis
+</div>
+</div>
+</div>
+<!-- Warning Box -->
+<div class="warning-box fade-in">
+<div class="warning-title">
+<span>⚠️</span> Peringatan Penting
+</div>
+<div class="warning-text">
+Jangan sampai pembayaran melewati batas waktu yang sudah ditentukan karena akan tertolak otomatis. Segera lakukan pembayaran untuk menyelesaikan proses permohonan paspor Anda.
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="btn-group">
+<button type="button" class="btn btn-primary btn-full" onclick="makePayment()">
+Bayar Sekarang
+</button>
+<button type="button" class="btn btn-secondary btn-full" onclick="printStatus()">
+Cetak Status
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Firebase SDK -->
+<script type="module">
+// Import Firebase modules
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { 
+    getAuth, 
+    onAuthStateChanged,
+    signOut
+} from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+// Firebase configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyDnFU4YCwV96wAd9wJdhdBNXXpbfNDGrQk",
+    authDomain: "daftar-paspor.firebaseapp.com",
+    projectId: "daftar-paspor",
+    storageBucket: "daftar-paspor.firebasestorage.app",
+    messagingSenderId: "535787439185",
+    appId: "1:535787439185:web:6d80b72fa7e85f8c672470",
+    measurementId: "G-XQYZ43R0P1"
+};
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+// Make functions globally available
+window.auth = auth;
+window.signOut = signOut;
+</script>
+<script>
+// Initialize the page
+document.addEventListener('DOMContentLoaded', function() {
+    // Check authentication state
+    checkAuthState();
+});
+// Check authentication state
+function checkAuthState() {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+        if (user) {
+            // Check if user is the agent
+            if (user.email === 'agency1@indonesia.com') {
+                // User is agent, show the page
+                setTimeout(() => {
+                    document.getElementById('loadingScreen').style.display = 'none';
+                }, 1500);
                 
-                <!-- Payment Status - Changed from deadline to success -->
-                <div class="payment-status">
-                    <span class="status-icon">✓</span>
-                    <span>Pembayaran Berhasil</span>
-                </div>
-                
-                <!-- Success Notice - Changed from warning to success -->
-                <div class="success-box">
-                    <div class="success-title">
-                        <span class="success-icon">✓</span>
-                        <span>Pembayaran Berhasil</span>
-                    </div>
-                    <div class="success-content">
-                        Pembayaran denda atas pelanggaran overstay atau pulang tanpa jalur resmi sesuai dengan undang-undang Malaysia telah berhasil dilakukan. Terima kasih atas kepatuhan Anda.
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Bottom Navigation (Mobile) -->
-    <nav class="bottom-nav">
-        <div class="nav-tabs">
-            <div class="nav-tab" onclick="goToDashboard()">
-                <div class="nav-icon">🏠</div>
-                <div class="nav-label">Beranda</div>
-            </div>
-            <div class="nav-tab" onclick="goToStatus()">
-                <div class="nav-icon">📊</div>
-                <div class="nav-label">Laporan</div>
-            </div>
-            <div class="nav-tab active" onclick="goToHistory()">
-                <div class="nav-icon">📚</div>
-                <div class="nav-label">Riwayat</div>
-            </div>
-            <div class="nav-tab" onclick="goToProfile()">
-                <div class="nav-icon">👤</div>
-                <div class="nav-label">Profil</div>
-            </div>
-        </div>
-    </nav>
-    
-    <!-- Firebase SDK -->
-    <script type="module">
-        // Import Firebase modules
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { 
-            getAuth, 
-            onAuthStateChanged,
-            signOut,
-            signInWithEmailAndPassword
-        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-        
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyDnFU4YCwV96wAd9wJdhdBNXXpbfNDGrQk",
-            authDomain: "daftar-paspor.firebaseapp.com",
-            projectId: "daftar-paspor",
-            storageBucket: "daftar-paspor.firebasestorage.app",
-            messagingSenderId: "535787439185",
-            appId: "1:535787439185:web:6d80b72fa7e85f8c672470",
-            measurementId: "G-XQYZ43R0P1"
-        };
-        
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        
-        // Make functions globally available
-        window.auth = auth;
-        window.signOut = signOut;
-        window.signInWithEmailAndPassword = signInWithEmailAndPassword;
-    </script>
-    
-    <script>
-        let currentUser = null;
-        const authorizedEmail = "agency1@indonesia.com";
-        const authorizedPassword = "Agency123";
-        
-        // Check authentication state
-        function checkAuthState() {
-            const unsubscribe = auth.onAuthStateChanged(async (user) => {
-                const loadingScreen = document.getElementById('loadingScreen');
-                const accessDenied = document.getElementById('accessDenied');
-                const pageContent = document.getElementById('pageContent');
-                
-                if (user) {
-                    currentUser = user;
-                    
-                    // Check if user is authorized
-                    if (user.email === authorizedEmail) {
-                        // User is authorized, show content
-                        setTimeout(() => {
-                            loadingScreen.style.opacity = '0';
-                            setTimeout(() => {
-                                loadingScreen.style.display = 'none';
-                                pageContent.classList.remove('hidden');
-                            }, 300);
-                        }, 1000);
-                    } else {
-                        // User is not authorized, show access denied
-                        setTimeout(() => {
-                            loadingScreen.style.opacity = '0';
-                            setTimeout(() => {
-                                loadingScreen.style.display = 'none';
-                                accessDenied.classList.remove('hidden');
-                            }, 300);
-                        }, 1000);
-                    }
-                } else {
-                    // User not authenticated, try to login with authorized credentials
-                    try {
-                        await signInWithEmailAndPassword(auth, authorizedEmail, authorizedPassword);
-                    } catch (error) {
-                        // Login failed, show access denied
-                        setTimeout(() => {
-                            loadingScreen.style.opacity = '0';
-                            setTimeout(() => {
-                                loadingScreen.style.display = 'none';
-                                accessDenied.classList.remove('hidden');
-                            }, 300);
-                        }, 1000);
-                    }
-                }
-            });
-        }
-        
-        // Navigation functions
-        function goToDashboard() {
-            window.location.href = 'dashboard.html';
-        }
-        
-        function goToProfile() {
-            window.location.href = 'profil.html';
-        }
-        
-        function goToStatus() {
-            window.location.href = 'status.html';
-        }
-        
-        function goToHistory() {
-            window.location.href = 'riwayat.html';
-        }
-        
-        // Logout function
-        async function logout() {
-            try {
-                await signOut(auth);
-                window.location.href = 'register.html';
-            } catch (error) {
-                console.error('Error signing out:', error);
-                alert('Terjadi kesalahan saat logout');
+                // Start countdown timer
+                startCountdown(2 * 60 * 60); // 2 hours in seconds
+            } else {
+                // User is not agent, show access denied
+                document.getElementById('loadingScreen').style.display = 'none';
+                document.getElementById('accessDenied').classList.remove('hidden');
             }
+        } else {
+            // User not authenticated, redirect to login
+            window.location.href = 'index.html';
         }
+    });
+}
+// Function to start countdown timer
+function startCountdown(duration) {
+    let timer = duration, hours, minutes, seconds;
+    
+    const countdownInterval = setInterval(function () {
+        hours = parseInt(timer / 3600, 10);
+        minutes = parseInt((timer % 3600) / 60, 10);
+        seconds = parseInt(timer % 60, 10);
         
-        // Initialize page
-        document.addEventListener('DOMContentLoaded', function() {
-            checkAuthState();
-        });
+        hours = hours < 10 ? "0" + hours : hours;
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
         
-        // Make functions globally available
-        window.logout = logout;
-        window.goToProfile = goToProfile;
-        window.goToStatus = goToStatus;
-        window.goToHistory = goToHistory;
-        window.goToDashboard = goToDashboard;
-    </script>
+        document.getElementById("hours").textContent = hours;
+        document.getElementById("minutes").textContent = minutes;
+        document.getElementById("seconds").textContent = seconds;
+        
+        if (--timer < 0) {
+            clearInterval(countdownInterval);
+            document.querySelector(".countdown-warning").textContent = "Waktu pembayaran telah habis!";
+            document.querySelector(".countdown-container").style.background = "rgba(239, 68, 68, 0.2)";
+            document.querySelector(".payment-status").textContent = "Kadaluarsa";
+            document.querySelector(".payment-status").style.background = "rgba(239, 68, 68, 0.3)";
+            document.querySelector(".status-badge").textContent = "Dibatalkan";
+            document.querySelector(".status-badge").classList.remove("status-pending");
+            document.querySelector(".status-badge").classList.add("status-error");
+            
+            // Disable payment button
+            const paymentButton = document.querySelector(".btn-primary");
+            paymentButton.textContent = "Pembayaran Kadaluarsa";
+            paymentButton.disabled = true;
+            paymentButton.style.background = "var(--neutral-gray)";
+            paymentButton.style.cursor = "not-allowed";
+        }
+    }, 1000);
+}
+// Function to handle payment
+function makePayment() {
+    // Show loading screen
+    document.getElementById('loadingScreen').style.display = 'flex';
+    document.querySelector('#loadingScreen p').textContent = 'Mengarahkan ke halaman pembayaran...';
+    
+    // Simulate redirect to payment page
+    setTimeout(() => {
+        // In a real application, this would redirect to the payment gateway
+        alert('Anda akan diarahkan ke halaman pembayaran');
+        document.getElementById('loadingScreen').style.display = 'none';
+    }, 2000);
+}
+// Function to print status
+function printStatus() {
+    // Show loading screen
+    document.getElementById('loadingScreen').style.display = 'flex';
+    document.querySelector('#loadingScreen p').textContent = 'Menyiapkan dokumen untuk dicetak...';
+    
+    // Simulate print functionality
+    setTimeout(() => {
+        window.print();
+        document.getElementById('loadingScreen').style.display = 'none';
+    }, 1500);
+}
+// Function to go back
+function goBack() {
+    // In a real application, this would navigate to the previous page
+    window.history.back();
+}
+// Function to go to dashboard
+function goToDashboard() {
+    window.location.href = 'dashboard.html';
+}
+</script>
 </body>
 </html>
