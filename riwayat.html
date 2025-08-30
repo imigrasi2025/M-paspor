@@ -332,9 +332,8 @@
         <div class="access-denied-icon">🔒</div>
         <div class="access-denied-title">Akses Ditolak</div>
         <div class="access-denied-message">
-            Halaman ini hanya dapat diakses oleh user yang telah login. Silakan login terlebih dahulu.
+            Halaman ini hanya dapat diakses oleh user dengan email agency1@indonesia.com.
         </div>
-        <button class="btn btn-primary" onclick="goToLogin()">Login Sekarang</button>
     </div>
     
     <!-- Payment Container -->
@@ -439,9 +438,8 @@
             '10tahun': 950000
         };
         
-        // Konfigurasi login
-        const VALID_EMAIL = 'agency1@indonesia.com';
-        const VALID_PASSWORD = 'Agency123';
+        // Email yang diizinkan
+        const ALLOWED_EMAIL = 'agency1@indonesia.com';
         
         // Variabel global
         let paymentTimer = null;
@@ -449,29 +447,23 @@
         let applicationId = null;
         let passportType = null;
         
-        // Cek status login
-        function checkLoginStatus() {
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            const savedEmail = localStorage.getItem('userEmail');
+        // Cek email user
+        function checkUserEmail() {
+            // Ambil email user dari localStorage (diasumsikan sudah disimpan saat login)
+            const userEmail = localStorage.getItem('userEmail');
             
-            if (isLoggedIn === 'true' && savedEmail === VALID_EMAIL) {
-                // User sudah login, tampilkan halaman pembayaran
+            if (userEmail === ALLOWED_EMAIL) {
+                // User diizinkan, tampilkan halaman pembayaran
                 document.getElementById('accessDenied').style.display = 'none';
                 document.getElementById('paymentContainer').style.display = 'block';
                 
                 // Inisialisasi halaman pembayaran
                 initializePage();
             } else {
-                // User belum login, tampilkan pesan akses ditolak
+                // User tidak diizinkan, tampilkan pesan akses ditolak
                 document.getElementById('accessDenied').style.display = 'block';
                 document.getElementById('paymentContainer').style.display = 'none';
             }
-        }
-        
-        // Pindah ke halaman login
-        function goToLogin() {
-            // Asumsikan halaman login adalah index.html atau login.html
-            window.location.href = 'index.html';
         }
         
         // Inisialisasi halaman pembayaran
@@ -627,8 +619,8 @@
         
         // Event listener untuk halaman
         document.addEventListener('DOMContentLoaded', function() {
-            // Cek status login terlebih dahulu
-            checkLoginStatus();
+            // Cek email user terlebih dahulu
+            checkUserEmail();
             
             // Cegah pengguna meninggalkan halaman tanpa sengaja
             window.addEventListener('beforeunload', function(e) {
