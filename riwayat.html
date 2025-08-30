@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Riwayat Permohonan - M-PASPOR</title>
+    <title>Pembayaran Paspor - Imigrasi Indonesia</title>
     <style>
         /* Reset and Base Styles */
         * {
@@ -12,650 +12,563 @@
             box-sizing: border-box;
         }
         :root {
-            --primary-blue: #045f45;
-            --primary-blue-dark: #046150;
-            --secondary-blue: #044532;
-            --accent-gold: #ffcc00;
-            --accent-gold-dark: #e6b800;
+            --primary-blue: #1e40af;
+            --primary-blue-dark: #1e3a8a;
+            --secondary-blue: #3b82f6;
+            --accent-gold: #f59e0b;
+            --accent-gold-dark: #d97706;
             --success-green: #10b981;
             --warning-orange: #f97316;
             --error-red: #ef4444;
             --neutral-gray: #6b7280;
             --light-gray: #f3f4f6;
             --white: #ffffff;
-            --dark-text: #333333;
+            --dark-text: #1f2937;
             --shadow-light: rgba(0, 0, 0, 0.1);
             --shadow-medium: rgba(0, 0, 0, 0.15);
             --shadow-heavy: rgba(0, 0, 0, 0.25);
-            --border-radius: 8px;
-            --border-radius-lg: 12px;
-            --transition: all 0.3s ease;
+            --border-radius: 12px;
+            --border-radius-lg: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f5f5;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
             color: var(--dark-text);
             line-height: 1.6;
             min-height: 100vh;
-            padding-bottom: 70px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        /* Loading Screen */
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        /* Payment Container */
+        .payment-container {
+            background: var(--white);
+            border-radius: var(--border-radius-lg);
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 
+                0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+        }
+        /* Header */
+        .payment-header {
             background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
             color: var(--white);
+            padding: 24px;
+            text-align: center;
         }
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: var(--white);
-            animation: spin 1s ease-in-out infinite;
-            margin-bottom: 20px;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        /* Top Navigation */
-        .top-nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background-color: var(--primary-blue);
-            padding: 12px 16px;
-            box-shadow: 0 2px 10px var(--shadow-medium);
-            z-index: 1000;
-        }
-        .nav-content {
-            max-width: 480px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .logo {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px var(--shadow-light);
-        }
-        .app-title {
-            color: var(--white);
-            font-size: 18px;
-            font-weight: 600;
-        }
-        .nav-actions {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-        .nav-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: var(--white);
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .nav-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-        .user-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--accent-gold);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--white);
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-        }
-        /* Container and Layout */
-        .container {
-            max-width: 480px;
-            margin: 0 auto;
-            padding: 0 16px;
-            position: relative;
-        }
-        .page-content {
-            padding-top: 70px;
-            padding-bottom: 20px;
-        }
-        /* Page Header */
-        .page-header {
-            margin-bottom: 20px;
-        }
-        .page-title {
+        .payment-title {
             font-size: 24px;
             font-weight: 600;
-            color: var(--primary-blue);
             margin-bottom: 8px;
         }
-        .page-subtitle {
-            color: var(--neutral-gray);
-            font-size: 16px;
-        }
-        /* Filter Section */
-        .filter-section {
-            background: var(--white);
-            border-radius: var(--border-radius);
-            padding: 16px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px var(--shadow-light);
-        }
-        .filter-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-        .filter-options {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding-bottom: 5px;
-        }
-        .filter-option {
-            padding: 8px 16px;
-            border-radius: 20px;
-            background-color: var(--light-gray);
-            color: var(--dark-text);
+        .payment-subtitle {
             font-size: 14px;
-            white-space: nowrap;
-            cursor: pointer;
-            transition: var(--transition);
+            opacity: 0.9;
         }
-        .filter-option.active {
-            background-color: var(--primary-blue);
+        /* Content */
+        .payment-content {
+            padding: 30px;
+        }
+        /* Timer */
+        .payment-timer {
+            background: linear-gradient(135deg, var(--warning-orange) 0%, var(--accent-gold) 100%);
             color: var(--white);
-        }
-        /* History Cards */
-        .history-card {
-            background: var(--white);
+            padding: 20px;
             border-radius: var(--border-radius);
-            padding: 16px;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 8px var(--shadow-light);
-            transition: var(--transition);
+            text-align: center;
+            margin-bottom: 30px;
         }
-        .history-card:hover {
-            box-shadow: 0 4px 12px var(--shadow-medium);
-            transform: translateY(-2px);
+        .timer-text {
+            font-size: 16px;
+            margin-bottom: 10px;
         }
-        .history-header {
+        .timer-countdown {
+            font-size: 32px;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+        }
+        /* Payment Info */
+        .payment-info {
+            background: var(--light-gray);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        .info-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .info-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
-        .history-id {
-            font-weight: 600;
-            font-size: 16px;
+        .info-row:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
         }
-        .history-status {
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .status-success {
-            background-color: rgba(16, 185, 129, 0.1);
-            color: var(--success-green);
-        }
-        .history-date {
-            display: flex;
-            align-items: center;
-            margin-bottom: 8px;
-            color: var(--neutral-gray);
+        .info-label {
             font-size: 14px;
-        }
-        .history-date-icon {
-            margin-right: 8px;
-        }
-        .history-location {
-            display: flex;
-            align-items: center;
-            margin-bottom: 12px;
             color: var(--neutral-gray);
-            font-size: 14px;
-        }
-        .history-location-icon {
-            margin-right: 8px;
-        }
-        .history-details {
-            display: flex;
-            justify-content: space-between;
-            padding-top: 12px;
-            border-top: 1px solid var(--light-gray);
-        }
-        .history-detail {
-            text-align: center;
-        }
-        .history-detail-label {
-            font-size: 12px;
-            color: var(--neutral-gray);
-            margin-bottom: 4px;
-        }
-        .history-detail-value {
-            font-weight: 600;
-            font-size: 14px;
-        }
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--neutral-gray);
-        }
-        .empty-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-        }
-        .empty-text {
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-        .empty-button {
-            background-color: var(--primary-blue);
-            color: var(--white);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .empty-button:hover {
-            background-color: var(--primary-blue-dark);
-        }
-        /* Bottom Navigation */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--white);
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
-            box-shadow: 0 -2px 10px var(--shadow-light);
-            z-index: 1000;
-        }
-        .nav-tabs {
-            max-width: 480px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-around;
-            padding: 8px 0;
-        }
-        .nav-tab {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 8px 12px;
-            text-decoration: none;
-            color: var(--neutral-gray);
-            transition: var(--transition);
-            border-radius: 8px;
-            min-width: 60px;
-        }
-        .nav-tab:hover,
-        .nav-tab.active {
-            color: var(--primary-blue);
-        }
-        .nav-icon {
-            font-size: 20px;
-            margin-bottom: 4px;
-        }
-        .nav-label {
-            font-size: 12px;
             font-weight: 500;
         }
-        /* Animations */
-        .fade-in {
-            animation: fadeIn 0.5s ease-out;
+        .info-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark-text);
+            text-align: right;
+            max-width: 60%;
         }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
+        .total-row {
+            background: var(--white);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 2px solid var(--primary-blue);
+        }
+        .total-row .info-label {
+            color: var(--primary-blue);
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .total-row .info-value {
+            color: var(--primary-blue);
+            font-size: 20px;
+            font-weight: 700;
+        }
+        /* Account Details */
+        .account-details {
+            background: rgba(30, 64, 175, 0.05);
+            border: 1px solid rgba(30, 64, 175, 0.2);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .account-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .account-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .account-row:last-child {
+            margin-bottom: 0;
+        }
+        .copy-btn {
+            background: var(--primary-blue);
+            color: var(--white);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-left: 8px;
+        }
+        .copy-btn:hover {
+            background: var(--primary-blue-dark);
+        }
+        /* Instructions */
+        .payment-instructions {
+            background: rgba(16, 185, 129, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .instruction-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--success-green);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .instruction-list {
+            list-style: none;
+            padding: 0;
+        }
+        .instruction-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: var(--dark-text);
+        }
+        .instruction-list li:last-child {
+            margin-bottom: 0;
+        }
+        .step-number {
+            background: var(--success-green);
+            color: var(--white);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            min-height: 52px;
+        }
+        .btn-primary {
+            background: var(--primary-blue);
+            color: var(--white);
+            width: 100%;
+        }
+        .btn-primary:hover {
+            background: var(--primary-blue-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow-medium);
+        }
+        .btn-secondary {
+            background: var(--white);
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+            width: 100%;
+        }
+        .btn-secondary:hover {
+            background: var(--primary-blue);
+            color: var(--white);
+        }
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .payment-container {
+                width: 95%;
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+            
+            .payment-content {
+                padding: 20px;
+            }
+            
+            .info-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            .info-value {
+                max-width: 100%;
+                text-align: left;
+            }
+            
+            .btn-group {
+                flex-direction: column;
             }
         }
-        /* Utility Classes */
-        .hidden { display: none; }
-        .text-center { text-align: center; }
-        .mb-0 { margin-bottom: 0; }
     </style>
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div class="loading-screen" id="loadingScreen">
-        <div class="loading-spinner"></div>
-        <p>Memuat Riwayat...</p>
-    </div>
-    
-    <!-- Top Navigation -->
-    <nav class="top-nav">
-        <div class="nav-content">
-            <div class="logo-container">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Logo_Kementrian_Imigrasi_dan_Pemasyarakatan_%282024%29.png/1200px-Logo_Kementrian_Imigrasi_dan_Pemasyarakatan_%282024%29.png" alt="Passport App Logo" class="logo">
-                <div class="app-title">M-PASPOR</div>
-            </div>
-            <div class="nav-actions">
-                <button class="nav-btn" onclick="logout()">Keluar</button>
-                <div class="user-avatar" id="userAvatar" onclick="goToProfile()">U</div>
-            </div>
+    <!-- Payment Container -->
+    <div class="payment-container">
+        <!-- Header -->
+        <div class="payment-header">
+            <div class="payment-title">Informasi Pembayaran</div>
+            <div class="payment-subtitle">Silakan lakukan pembayaran sesuai informasi di bawah</div>
         </div>
-    </nav>
-    
-    <!-- Main Content -->
-    <div class="container">
-        <div class="page-content">
-            <!-- Page Header -->
-            <div class="page-header fade-in">
-                <h1 class="page-title">Riwayat Permohonan</h1>
-                <p class="page-subtitle">Daftar permohonan paspor yang telah Anda ajukan</p>
+        
+        <!-- Content -->
+        <div class="payment-content">
+            <!-- Payment Timer -->
+            <div class="payment-timer">
+                <div class="timer-text">Batas waktu pembayaran:</div>
+                <div class="timer-countdown" id="paymentTimer">02:00:00</div>
             </div>
             
-            <!-- Filter Section -->
-            <div class="filter-section fade-in">
-                <h3 class="filter-title">Filter Tahun</h3>
-                <div class="filter-options">
-                    <div class="filter-option active" onclick="filterHistory('all')">Semua</div>
-                    <div class="filter-option" onclick="filterHistory('2025')">2025</div>
-                    <div class="filter-option" onclick="filterHistory('2024')">2024</div>
-                    <div class="filter-option" onclick="filterHistory('2023')">2023</div>
-                    <div class="filter-option" onclick="filterHistory('2022')">2022</div>
+            <!-- Payment Info -->
+            <div class="payment-info">
+                <div class="info-title">Detail Pembayaran</div>
+                
+                <div class="info-row">
+                    <span class="info-label">No. Permohonan:</span>
+                    <span class="info-value" id="applicationNumber">-</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label">Jenis Paspor:</span>
+                    <span class="info-value" id="passportType">-</span>
+                </div>
+                
+                <div class="total-row">
+                    <div class="info-row">
+                        <span class="info-label">Total Pembayaran:</span>
+                        <span class="info-value" id="totalAmount">Rp 0</span>
+                    </div>
                 </div>
             </div>
             
-            <!-- History List -->
-            <div id="historyList">
-                <!-- History items will be populated by JavaScript -->
+            <!-- Account Details -->
+            <div class="account-details">
+                <div class="account-title">Informasi No pembayaran</div>
+                
+                <div class="account-row">
+                    <span class="info-label">Nama Penerima:</span>
+                    <span class="info-value" id="accountName">PT dompet harapan bangsa (OY INDONESIA)</span>
+                </div>
+                
+                <div class="account-row">
+                    <span class="info-label">Kode Pembayaran:</span>
+                    <span class="info-value">
+                        <span id="accountNumber">-</span>
+                        <button class="copy-btn" onclick="copyToClipboard('accountNumber')">Salin</button>
+                    </span>
+                </div>
             </div>
             
-            <!-- Empty State (hidden by default) -->
-            <div class="empty-state hidden" id="emptyState">
-                <div class="empty-icon">📋</div>
-                <p class="empty-text">Tidak ada riwayat permohonan ditemukan</p>
-                <button class="empty-button" onclick="goToApplication()">Ajukan Permohonan</button>
+            <!-- Payment Instructions -->
+            <div class="payment-instructions">
+                <div class="instruction-title">Cara Pembayaran</div>
+                <ol class="instruction-list">
+                    <li>
+                        <div class="step-number">1</div>
+                        <div>Transfer ke kode yang tertera di atas</div>
+                    </li>
+                    <li>
+                        <div class="step-number">2</div>
+                        <div>Transfer sesuai nominal yang tertera</div>
+                    </li>
+                    <li>
+                        <div class="step-number">3</div>
+                        <div>Simpan bukti transfer</div>
+                    </li>
+                    <li>
+                        <div class="step-number">4</div>
+                        <div>Kembali ke dashboard untuk upload bukti</div>
+                    </li>
+                </ol>
+            </div>
+            
+            <!-- Action Button -->
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="goBack()">Kembali</button>
+                <button class="btn btn-primary" onclick="goToUploadProof()">
+                    Upload Bukti Bayar
+                </button>
             </div>
         </div>
     </div>
     
-    <!-- Bottom Navigation (Mobile) -->
-    <nav class="bottom-nav">
-        <div class="nav-tabs">
-            <div class="nav-tab" onclick="goToDashboard()">
-                <div class="nav-icon">🏠</div>
-                <div class="nav-label">Beranda</div>
-            </div>
-            <div class="nav-tab" onclick="goToStatus()">
-                <div class="nav-icon">📊</div>
-                <div class="nav-label">Laporan</div>
-            </div>
-            <div class="nav-tab active" onclick="goToHistory()">
-                <div class="nav-icon">📚</div>
-                <div class="nav-label">Riwayat</div>
-            </div>
-            <div class="nav-tab" onclick="goToProfile()">
-                <div class="nav-icon">👤</div>
-                <div class="nav-label">Profil</div>
-            </div>
-        </div>
-    </nav>
-    
-    <!-- Firebase SDK -->
-    <script type="module">
-        // Import Firebase modules
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { 
-            getAuth, 
-            onAuthStateChanged,
-            signOut
-        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-        
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyDnFU4YCwV96wAd9wJdhdBNXXpbfNDGrQk",
-            authDomain: "daftar-paspor.firebaseapp.com",
-            projectId: "daftar-paspor",
-            storageBucket: "daftar-paspor.firebasestorage.app",
-            messagingSenderId: "535787439185",
-            appId: "1:535787439185:web:6d80b72fa7e85f8c672470",
-            measurementId: "G-XQYZ43R0P1"
+    <script>
+        // Konfigurasi kode pembayaran berdasarkan jenis paspor
+        const PAYMENT_CODES = {
+            '5tahun': '135036000032742659',
+            '10tahun': '135036000032715202'
         };
         
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
+        // Konfigurasi harga berdasarkan jenis paspor
+        const PASSPORT_PRICES = {
+            '5tahun': 653500,
+            '10tahun': 950000
+        };
         
-        // Make functions globally available
-        window.auth = auth;
-        window.signOut = signOut;
-    </script>
-    
-    <script>
-        let currentUser = null;
-        let currentFilter = 'all';
+        // Variabel global
+        let paymentTimer = null;
+        let timeRemaining = 0;
+        let applicationId = null;
+        let passportType = null;
         
-        // Sample history data
-        const historyData = [
-            {
-                id: "PPM-20250315-001",
-                date: "15 Maret 2025",
-                location: "Kantor Imigrasi Medan",
-                status: "Berhasil",
-                completedDate: "25 Maret 2025",
-                passportType: "Biasa",
-                year: "2025"
-            },
-            {
-                id: "PPM-20241120-002",
-                date: "20 November 2024",
-                location: "Kantor Imigrasi Medan",
-                status: "Berhasil",
-                completedDate: "5 Desember 2024",
-                passportType: "Biasa",
-                year: "2024"
-            },
-            {
-                id: "PPM-20240708-003",
-                date: "8 Juli 2024",
-                location: "Kantor Imigrasi Medan",
-                status: "Berhasil",
-                completedDate: "20 Juli 2024",
-                passportType: "Biasa",
-                year: "2024"
-            },
-            {
-                id: "PPM-20230325-004",
-                date: "25 Maret 2023",
-                location: "Kantor Imigrasi Medan",
-                status: "Berhasil",
-                completedDate: "10 April 2023",
-                passportType: "Biasa",
-                year: "2023"
-            },
-            {
-                id: "PPM-20220915-005",
-                date: "15 September 2022",
-                location: "Kantor Imigrasi Medan",
-                status: "Berhasil",
-                completedDate: "30 September 2022",
-                passportType: "Biasa",
-                year: "2022"
+        // Inisialisasi halaman
+        function initializePage() {
+            // Cek parameter URL
+            const urlParams = new URLSearchParams(window.location.search);
+            passportType = urlParams.get('type') || localStorage.getItem('passportType') || '5tahun';
+            
+            // Validasi jenis paspor
+            if (!PAYMENT_CODES[passportType]) {
+                alert('Jenis paspor tidak valid. Menggunakan default 5 tahun.');
+                passportType = '5tahun';
             }
-        ];
-        
-        // Check authentication state
-        function checkAuthState() {
-            const unsubscribe = auth.onAuthStateChanged((user) => {
-                const loadingScreen = document.getElementById('loadingScreen');
+            
+            // Simpan jenis paspor ke localStorage
+            localStorage.setItem('passportType', passportType);
+            
+            // Generate ID aplikasi
+            applicationId = 'APP-' + Date.now();
+            
+            // Cek apakah ada timer yang tersimpan di localStorage
+            const savedTime = localStorage.getItem('paymentTimer_' + applicationId);
+            const savedTimestamp = localStorage.getItem('paymentTimerTimestamp_' + applicationId);
+            
+            if (savedTime && savedTimestamp) {
+                // Hitung waktu yang tersisa
+                const now = new Date().getTime();
+                const elapsed = Math.floor((now - parseInt(savedTimestamp)) / 1000);
+                timeRemaining = Math.max(0, parseInt(savedTime) - elapsed);
                 
-                if (user) {
-                    currentUser = user;
-                    
-                    // Hide loading screen
-                    setTimeout(() => {
-                        loadingScreen.style.opacity = '0';
-                        setTimeout(() => {
-                            loadingScreen.style.display = 'none';
-                        }, 300);
-                    }, 1000);
-                    
-                    // Load history data
-                    loadHistoryData();
-                } else {
-                    // User not authenticated, redirect to login
-                    window.location.href = 'index.html';
+                if (timeRemaining <= 0) {
+                    handlePaymentTimeout();
+                    return;
                 }
-            });
-        }
-        
-        // Load and display history data
-        function loadHistoryData() {
-            const historyList = document.getElementById('historyList');
-            const emptyState = document.getElementById('emptyState');
-            
-            // Filter data based on current filter
-            let filteredData = historyData;
-            if (currentFilter !== 'all') {
-                filteredData = historyData.filter(item => item.year === currentFilter);
+            } else {
+                // Set timer baru (2 jam = 7200 detik)
+                timeRemaining = 7200;
+                
+                // Simpan ke localStorage
+                localStorage.setItem('paymentTimer_' + applicationId, timeRemaining);
+                localStorage.setItem('paymentTimerTimestamp_' + applicationId, new Date().getTime());
             }
             
-            // Clear existing content
-            historyList.innerHTML = '';
+            // Update tampilan informasi pembayaran
+            updatePaymentInfo();
             
-            // Check if there's any data
-            if (filteredData.length === 0) {
-                historyList.classList.add('hidden');
-                emptyState.classList.remove('hidden');
-                return;
-            }
-            
-            // Show history list and hide empty state
-            historyList.classList.remove('hidden');
-            emptyState.classList.add('hidden');
-            
-            // Add each history item
-            filteredData.forEach((item, index) => {
-                const historyCard = document.createElement('div');
-                historyCard.className = 'history-card fade-in';
-                historyCard.style.animationDelay = `${index * 0.1}s`;
-                
-                historyCard.innerHTML = `
-                    <div class="history-header">
-                        <div class="history-id">${item.id}</div>
-                        <div class="history-status status-success">${item.status}</div>
-                    </div>
-                    <div class="history-date">
-                        <span class="history-date-icon">📅</span>
-                        <span>Tanggal Permohonan: ${item.date}</span>
-                    </div>
-                    <div class="history-location">
-                        <span class="history-location-icon">📍</span>
-                        <span>${item.location}</span>
-                    </div>
-                    <div class="history-details">
-                        <div class="history-detail">
-                            <div class="history-detail-label">Tanggal Selesai</div>
-                            <div class="history-detail-value">${item.completedDate}</div>
-                        </div>
-                        <div class="history-detail">
-                            <div class="history-detail-label">Jenis Paspor</div>
-                            <div class="history-detail-value">${item.passportType}</div>
-                        </div>
-                    </div>
-                `;
-                
-                historyList.appendChild(historyCard);
-            });
+            // Mulai timer
+            startPaymentTimer();
         }
         
-        // Filter history by year
-        function filterHistory(year) {
-            currentFilter = year;
+        // Update informasi pembayaran
+        function updatePaymentInfo() {
+            // Update nomor permohonan
+            document.getElementById('applicationNumber').textContent = applicationId;
             
-            // Update active filter button
-            const filterOptions = document.querySelectorAll('.filter-option');
-            filterOptions.forEach(option => {
-                option.classList.remove('active');
-                if (option.textContent === year || (year === 'all' && option.textContent === 'Semua')) {
-                    option.classList.add('active');
+            // Update jenis paspor
+            const passportTypeText = passportType === '5tahun' ? 'e-Paspor 5 Tahun' : 'e-Paspor 10 Tahun';
+            document.getElementById('passportType').textContent = passportTypeText;
+            
+            // Update total pembayaran
+            const totalAmount = PASSPORT_PRICES[passportType];
+            document.getElementById('totalAmount').textContent = 'Rp ' + totalAmount.toLocaleString('id-ID');
+            
+            // Simpan total pembayaran ke localStorage
+            localStorage.setItem('totalAmount', totalAmount);
+            
+            // Update informasi rekening berdasarkan jenis paspor
+            document.getElementById('accountNumber').textContent = PAYMENT_CODES[passportType];
+        }
+        
+        // Mulai timer pembayaran
+        function startPaymentTimer() {
+            // Update tampilan timer
+            updateTimerDisplay();
+            
+            // Set interval untuk update timer setiap detik
+            paymentTimer = setInterval(() => {
+                timeRemaining--;
+                
+                // Update localStorage
+                localStorage.setItem('paymentTimer_' + applicationId, timeRemaining);
+                
+                // Perbarui tampilan timer
+                updateTimerDisplay();
+                
+                // Cek apakah waktu habis
+                if (timeRemaining <= 0) {
+                    clearInterval(paymentTimer);
+                    handlePaymentTimeout();
                 }
-            });
+            }, 1000);
+        }
+        
+        // Update tampilan timer
+        function updateTimerDisplay() {
+            const hours = Math.floor(timeRemaining / 3600);
+            const minutes = Math.floor((timeRemaining % 3600) / 60);
+            const seconds = timeRemaining % 60;
             
-            // Reload history data with new filter
-            loadHistoryData();
-        }
-        
-        // Navigation functions
-        function goToDashboard() {
-            window.location.href = 'dashboard.html';
-        }
-        
-        function goToProfile() {
-            window.location.href = 'profil.html';
-        }
-        
-        function goToStatus() {
-            window.location.href = 'status.html';
-        }
-        
-        function goToHistory() {
-            // Already on history page
-        }
-        
-        function goToApplication() {
-            window.location.href = 'form.html';
-        }
-        
-        // Logout function
-        async function logout() {
-            try {
-                await signOut(auth);
-                window.location.href = 'register.html';
-            } catch (error) {
-                console.error('Error signing out:', error);
-                alert('Terjadi kesalahan saat logout');
+            const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('paymentTimer').textContent = timeString;
+            
+            // Ubah warna timer jika kurang dari 30 menit
+            if (timeRemaining <= 1800) { // 30 menit
+                document.querySelector('.payment-timer').style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
             }
         }
         
-        // Initialize page
+        // Handle ketika waktu pembayaran habis
+        function handlePaymentTimeout() {
+            alert('Waktu pembayaran telah habis. Silakan buat permohonan baru.');
+            
+            // Hapus data dari localStorage
+            localStorage.removeItem('paymentTimer_' + applicationId);
+            localStorage.removeItem('paymentTimerTimestamp_' + applicationId);
+            
+            // Redirect ke halaman pembayaran
+            window.location.href = 'pembayaran.html';
+        }
+        
+        // Salin teks ke clipboard
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                // Tampilkan feedback sementara
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = 'Tersalin!';
+                btn.style.background = '#10b981';
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '#1e40af';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                alert('Gagal menyalin. Silakan salin manual.');
+            });
+        }
+        
+        // Pindah ke halaman upload bukti
+        function goToUploadProof() {
+            window.location.href = `upload-bukti.html?id=${applicationId}&type=${passportType}`;
+        }
+        
+        // Kembali ke halaman sebelumnya
+        function goBack() {
+            window.location.href = 'pembayaran.html';
+        }
+        
+        // Event listener untuk halaman
         document.addEventListener('DOMContentLoaded', function() {
-            checkAuthState();
+            initializePage();
+            
+            // Cegah pengguna meninggalkan halaman tanpa sengaja
+            window.addEventListener('beforeunload', function(e) {
+                if (paymentTimer) {
+                    e.preventDefault();
+                    e.returnValue = 'Pembayaran sedang berlangsung. Yakin ingin meninggalkan halaman?';
+                }
+            });
         });
-        
-        // Make functions globally available
-        window.logout = logout;
-        window.goToProfile = goToProfile;
-        window.goToStatus = goToStatus;
-        window.goToHistory = goToHistory;
-        window.goToDashboard = goToDashboard;
-        window.goToApplication = goToApplication;
-        window.filterHistory = filterHistory;
     </script>
 </body>
+
 </html>
+
