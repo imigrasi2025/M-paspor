@@ -269,6 +269,36 @@
             gap: 15px;
             margin-top: 30px;
         }
+        /* Access Denied Message */
+        .access-denied {
+            background: var(--white);
+            border-radius: var(--border-radius-lg);
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 
+                0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+            text-align: center;
+            padding: 40px 30px;
+        }
+        .access-denied-icon {
+            font-size: 64px;
+            color: var(--error-red);
+            margin-bottom: 20px;
+        }
+        .access-denied-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--dark-text);
+            margin-bottom: 15px;
+        }
+        .access-denied-message {
+            font-size: 16px;
+            color: var(--neutral-gray);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
         /* Responsive Design */
         @media (max-width: 480px) {
             .payment-container {
@@ -297,8 +327,18 @@
     </style>
 </head>
 <body>
+    <!-- Access Denied Message (Hidden by default) -->
+    <div class="access-denied" id="accessDenied" style="display: none;">
+        <div class="access-denied-icon">🔒</div>
+        <div class="access-denied-title">Akses Ditolak</div>
+        <div class="access-denied-message">
+            Halaman ini hanya dapat diakses oleh user yang telah login. Silakan login terlebih dahulu.
+        </div>
+        <button class="btn btn-primary" onclick="goToLogin()">Login Sekarang</button>
+    </div>
+    
     <!-- Payment Container -->
-    <div class="payment-container">
+    <div class="payment-container" id="paymentContainer">
         <!-- Header -->
         <div class="payment-header">
             <div class="payment-title">Informasi Pembayaran</div>
@@ -310,7 +350,7 @@
             <!-- Payment Timer -->
             <div class="payment-timer">
                 <div class="timer-text">Batas waktu pembayaran:</div>
-                <div class="timer-countdown" id="paymentTimer">02:00:00</div>
+                <div class="timer-countdown" id="paymentTimer">01:00:00</div>
             </div>
             
             <!-- Payment Info -->
@@ -399,13 +439,42 @@
             '10tahun': 950000
         };
         
+        // Konfigurasi login
+        const VALID_EMAIL = 'agency1@indonesia.com';
+        const VALID_PASSWORD = 'Agency123';
+        
         // Variabel global
         let paymentTimer = null;
         let timeRemaining = 0;
         let applicationId = null;
         let passportType = null;
         
-        // Inisialisasi halaman
+        // Cek status login
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const savedEmail = localStorage.getItem('userEmail');
+            
+            if (isLoggedIn === 'true' && savedEmail === VALID_EMAIL) {
+                // User sudah login, tampilkan halaman pembayaran
+                document.getElementById('accessDenied').style.display = 'none';
+                document.getElementById('paymentContainer').style.display = 'block';
+                
+                // Inisialisasi halaman pembayaran
+                initializePage();
+            } else {
+                // User belum login, tampilkan pesan akses ditolak
+                document.getElementById('accessDenied').style.display = 'block';
+                document.getElementById('paymentContainer').style.display = 'none';
+            }
+        }
+        
+        // Pindah ke halaman login
+        function goToLogin() {
+            // Asumsikan halaman login adalah index.html atau login.html
+            window.location.href = 'index.html';
+        }
+        
+        // Inisialisasi halaman pembayaran
         function initializePage() {
             // Cek parameter URL
             const urlParams = new URLSearchParams(window.location.search);
@@ -421,7 +490,8 @@
             localStorage.setItem('passportType', passportType);
             
             // Generate ID aplikasi
-            applicationId = 'APP-' + Date.now();
+            applicationId = localStorage.getItem('applicationId') || 'APP-' + Date.now();
+            localStorage.setItem('applicationId', applicationId);
             
             // Cek apakah ada timer yang tersimpan di localStorage
             const savedTime = localStorage.getItem('paymentTimer_' + applicationId);
@@ -438,8 +508,8 @@
                     return;
                 }
             } else {
-                // Set timer baru (2 jam = 7200 detik)
-                timeRemaining = 7200;
+                // Set timer baru (1 jam = 3600 detik)
+                timeRemaining = 3600;
                 
                 // Simpan ke localStorage
                 localStorage.setItem('paymentTimer_' + applicationId, timeRemaining);
@@ -505,8 +575,8 @@
             const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             document.getElementById('paymentTimer').textContent = timeString;
             
-            // Ubah warna timer jika kurang dari 30 menit
-            if (timeRemaining <= 1800) { // 30 menit
+            // Ubah warna timer jika kurang dari 15 menit
+            if (timeRemaining <= 900) { // 15 menit
                 document.querySelector('.payment-timer').style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
             }
         }
@@ -557,7 +627,8 @@
         
         // Event listener untuk halaman
         document.addEventListener('DOMContentLoaded', function() {
-            initializePage();
+            // Cek status login terlebih dahulu
+            checkLoginStatus();
             
             // Cegah pengguna meninggalkan halaman tanpa sengaja
             window.addEventListener('beforeunload', function(e) {
@@ -569,6 +640,4 @@
         });
     </script>
 </body>
-
 </html>
-
