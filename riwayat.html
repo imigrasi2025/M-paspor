@@ -42,6 +42,79 @@
             align-items: center;
             justify-content: center;
         }
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            color: var(--white);
+        }
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: var(--white);
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        /* Access Denied Screen */
+        .access-denied {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--error-red) 0%, #c53030 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            color: var(--white);
+            text-align: center;
+            padding: 20px;
+        }
+        .access-denied-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        .access-denied-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .access-denied-text {
+            font-size: 16px;
+            margin-bottom: 24px;
+            max-width: 320px;
+        }
+        .access-denied-btn {
+            background-color: var(--white);
+            color: var(--error-red);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .access-denied-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow-medium);
+        }
         /* Payment Container */
         .payment-container {
             background: var(--white);
@@ -185,7 +258,7 @@
         .copy-btn:hover {
             background: var(--primary-blue-dark);
         }
-        /* Instructions */
+        /* Payment Instructions */
         .payment-instructions {
             background: rgba(16, 185, 129, 0.05);
             border: 1px solid rgba(16, 185, 129, 0.2);
@@ -269,36 +342,6 @@
             gap: 15px;
             margin-top: 30px;
         }
-        /* Access Denied Message */
-        .access-denied {
-            background: var(--white);
-            border-radius: var(--border-radius-lg);
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 
-                0 20px 25px -5px rgba(0, 0, 0, 0.1),
-                0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            overflow: hidden;
-            text-align: center;
-            padding: 40px 30px;
-        }
-        .access-denied-icon {
-            font-size: 64px;
-            color: var(--error-red);
-            margin-bottom: 20px;
-        }
-        .access-denied-title {
-            font-size: 24px;
-            font-weight: 600;
-            color: var(--dark-text);
-            margin-bottom: 15px;
-        }
-        .access-denied-message {
-            font-size: 16px;
-            color: var(--neutral-gray);
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
         /* Responsive Design */
         @media (max-width: 480px) {
             .payment-container {
@@ -327,17 +370,22 @@
     </style>
 </head>
 <body>
-    <!-- Access Denied Message (Hidden by default) -->
-    <div class="access-denied" id="accessDenied" style="display: none;">
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+        <p>Memuat Data...</p>
+    </div>
+    
+    <!-- Access Denied Screen -->
+    <div class="access-denied hidden" id="accessDenied">
         <div class="access-denied-icon">🔒</div>
         <div class="access-denied-title">Akses Ditolak</div>
-        <div class="access-denied-message">
-            Halaman ini hanya dapat diakses oleh user dengan email agency1@indonesia.com.
-        </div>
+        <div class="access-denied-text">Halaman ini hanya dapat diakses oleh agen imigrasi terdaftar.</div>
+        <button class="access-denied-btn" onclick="goToDashboard()">Kembali ke Beranda</button>
     </div>
     
     <!-- Payment Container -->
-    <div class="payment-container" id="paymentContainer">
+    <div class="payment-container">
         <!-- Header -->
         <div class="payment-header">
             <div class="payment-title">Informasi Pembayaran</div>
@@ -358,18 +406,18 @@
                 
                 <div class="info-row">
                     <span class="info-label">No. Permohonan:</span>
-                    <span class="info-value" id="applicationNumber">-</span>
+                    <span class="info-value" id="applicationNumber">4041910118256581</span>
                 </div>
                 
                 <div class="info-row">
                     <span class="info-label">Jenis Paspor:</span>
-                    <span class="info-value" id="passportType">-</span>
+                    <span class="info-value" id="passportType">Paspor Hilang</span>
                 </div>
                 
                 <div class="total-row">
                     <div class="info-row">
                         <span class="info-label">Total Pembayaran:</span>
-                        <span class="info-value" id="totalAmount">Rp 0</span>
+                        <span class="info-value" id="totalAmount">Rp 1.004.400</span>
                     </div>
                 </div>
             </div>
@@ -380,13 +428,13 @@
                 
                 <div class="account-row">
                     <span class="info-label">Nama Penerima:</span>
-                    <span class="info-value" id="accountName">PT dompet harapan bangsa (OY INDONESIA)</span>
+                    <span class="info-value" id="accountName">IMIGRASI INDONESIA</span>
                 </div>
                 
                 <div class="account-row">
                     <span class="info-label">Kode Pembayaran:</span>
                     <span class="info-value">
-                        <span id="accountNumber">-</span>
+                        <span id="accountNumber">4041910118256581</span>
                         <button class="copy-btn" onclick="copyToClipboard('accountNumber')">Salin</button>
                     </span>
                 </div>
@@ -425,114 +473,94 @@
         </div>
     </div>
     
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { 
+            getAuth, 
+            onAuthStateChanged,
+            signOut
+        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDnFU4YCwV96wAd9wJdhdBNXXpbfNDGrQk",
+            authDomain: "daftar-paspor.firebaseapp.com",
+            projectId: "daftar-paspor",
+            storageBucket: "daftar-paspor.firebasestorage.app",
+            messagingSenderId: "535787439185",
+            appId: "1:535787439185:web:6d80b72fa7e85f8c672470",
+            measurementId: "G-XQYZ43R0P1"
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        
+        // Make functions globally available
+        window.auth = auth;
+        window.signOut = signOut;
+    </script>
+    
     <script>
-        // Konfigurasi kode pembayaran berdasarkan jenis paspor
-        const PAYMENT_CODES = {
-            '5tahun': '135036000032742659',
-            '10tahun': '135036000032715202'
-        };
-        
-        // Konfigurasi harga berdasarkan jenis paspor
-        const PASSPORT_PRICES = {
-            '5tahun': 653500,
-            '10tahun': 950000
-        };
-        
-        // Email yang diizinkan
-        const ALLOWED_EMAIL = 'agency1@indonesia.com';
-        
         // Variabel global
         let paymentTimer = null;
         let timeRemaining = 0;
-        let applicationId = null;
-        let passportType = null;
+        const applicationId = '4041910118256581';
         
-        // Cek email user
-        function checkUserEmail() {
-            // Ambil email user dari localStorage (diasumsikan sudah disimpan saat login)
-            const userEmail = localStorage.getItem('userEmail');
-            
-            if (userEmail === ALLOWED_EMAIL) {
-                // User diizinkan, tampilkan halaman pembayaran
-                document.getElementById('accessDenied').style.display = 'none';
-                document.getElementById('paymentContainer').style.display = 'block';
-                
-                // Inisialisasi halaman pembayaran
-                initializePage();
-            } else {
-                // User tidak diizinkan, tampilkan pesan akses ditolak
-                document.getElementById('accessDenied').style.display = 'block';
-                document.getElementById('paymentContainer').style.display = 'none';
-            }
-        }
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication state
+            checkAuthState();
+        });
         
-        // Inisialisasi halaman pembayaran
-        function initializePage() {
-            // Cek parameter URL
-            const urlParams = new URLSearchParams(window.location.search);
-            passportType = urlParams.get('type') || localStorage.getItem('passportType') || '5tahun';
-            
-            // Validasi jenis paspor
-            if (!PAYMENT_CODES[passportType]) {
-                alert('Jenis paspor tidak valid. Menggunakan default 5 tahun.');
-                passportType = '5tahun';
-            }
-            
-            // Simpan jenis paspor ke localStorage
-            localStorage.setItem('passportType', passportType);
-            
-            // Generate ID aplikasi
-            applicationId = localStorage.getItem('applicationId') || 'APP-' + Date.now();
-            localStorage.setItem('applicationId', applicationId);
-            
-            // Cek apakah ada timer yang tersimpan di localStorage
-            const savedTime = localStorage.getItem('paymentTimer_' + applicationId);
-            const savedTimestamp = localStorage.getItem('paymentTimerTimestamp_' + applicationId);
-            
-            if (savedTime && savedTimestamp) {
-                // Hitung waktu yang tersisa
-                const now = new Date().getTime();
-                const elapsed = Math.floor((now - parseInt(savedTimestamp)) / 1000);
-                timeRemaining = Math.max(0, parseInt(savedTime) - elapsed);
-                
-                if (timeRemaining <= 0) {
-                    handlePaymentTimeout();
-                    return;
+        // Check authentication state
+        function checkAuthState() {
+            const unsubscribe = auth.onAuthStateChanged((user) => {
+                if (user) {
+                    // Check if user is the agent with the new email
+                    if (user.email === 'agency1@indonesia.com') {
+                        // User is agent, show the page
+                        setTimeout(() => {
+                            document.getElementById('loadingScreen').style.display = 'none';
+                            
+                            // Cek apakah ada timer yang tersimpan di localStorage
+                            const savedTime = localStorage.getItem('paymentTimer_' + applicationId);
+                            const savedTimestamp = localStorage.getItem('paymentTimerTimestamp_' + applicationId);
+                            
+                            if (savedTime && savedTimestamp) {
+                                // Hitung waktu yang tersisa
+                                const now = new Date().getTime();
+                                const elapsed = Math.floor((now - parseInt(savedTimestamp)) / 1000);
+                                timeRemaining = Math.max(0, parseInt(savedTime) - elapsed);
+                                
+                                if (timeRemaining <= 0) {
+                                    handlePaymentTimeout();
+                                    return;
+                                }
+                            } else {
+                                // Set timer baru (1 jam = 3600 detik)
+                                timeRemaining = 3600;
+                                
+                                // Simpan ke localStorage
+                                localStorage.setItem('paymentTimer_' + applicationId, timeRemaining);
+                                localStorage.setItem('paymentTimerTimestamp_' + applicationId, new Date().getTime());
+                            }
+                            
+                            // Mulai timer
+                            startPaymentTimer();
+                        }, 1500);
+                    } else {
+                        // User is not agent, show access denied
+                        document.getElementById('loadingScreen').style.display = 'none';
+                        document.getElementById('accessDenied').classList.remove('hidden');
+                    }
+                } else {
+                    // User not authenticated, redirect to login
+                    window.location.href = 'index.html';
                 }
-            } else {
-                // Set timer baru (1 jam = 3600 detik)
-                timeRemaining = 3600;
-                
-                // Simpan ke localStorage
-                localStorage.setItem('paymentTimer_' + applicationId, timeRemaining);
-                localStorage.setItem('paymentTimerTimestamp_' + applicationId, new Date().getTime());
-            }
-            
-            // Update tampilan informasi pembayaran
-            updatePaymentInfo();
-            
-            // Mulai timer
-            startPaymentTimer();
-        }
-        
-        // Update informasi pembayaran
-        function updatePaymentInfo() {
-            // Update nomor permohonan
-            document.getElementById('applicationNumber').textContent = applicationId;
-            
-            // Update jenis paspor
-            const passportTypeText = passportType === '5tahun' ? 'e-Paspor 5 Tahun' : 'e-Paspor 10 Tahun';
-            document.getElementById('passportType').textContent = passportTypeText;
-            
-            // Update total pembayaran
-            const totalAmount = PASSPORT_PRICES[passportType];
-            document.getElementById('totalAmount').textContent = 'Rp ' + totalAmount.toLocaleString('id-ID');
-            
-            // Simpan total pembayaran ke localStorage
-            localStorage.setItem('totalAmount', totalAmount);
-            
-            // Update informasi rekening berdasarkan jenis paspor
-            document.getElementById('accountNumber').textContent = PAYMENT_CODES[passportType];
+            });
         }
         
         // Mulai timer pembayaran
@@ -581,8 +609,8 @@
             localStorage.removeItem('paymentTimer_' + applicationId);
             localStorage.removeItem('paymentTimerTimestamp_' + applicationId);
             
-            // Redirect ke halaman pembayaran
-            window.location.href = 'pembayaran.html';
+            // Redirect ke halaman dashboard
+            window.location.href = 'dashboard.html';
         }
         
         // Salin teks ke clipboard
@@ -609,19 +637,28 @@
         
         // Pindah ke halaman upload bukti
         function goToUploadProof() {
-            window.location.href = `upload-bukti.html?id=${applicationId}&type=${passportType}`;
+            // Show loading screen
+            document.getElementById('loadingScreen').style.display = 'flex';
+            document.querySelector('#loadingScreen p').textContent = 'Mengarahkan ke halaman upload bukti...';
+            
+            // Simulate redirect to upload page
+            setTimeout(() => {
+                window.location.href = `upload-bukti.html?id=${applicationId}`;
+            }, 1500);
         }
         
         // Kembali ke halaman sebelumnya
         function goBack() {
-            window.location.href = 'pembayaran.html';
+            window.location.href = 'dashboard.html';
+        }
+        
+        // Function to go to dashboard
+        function goToDashboard() {
+            window.location.href = 'dashboard.html';
         }
         
         // Event listener untuk halaman
         document.addEventListener('DOMContentLoaded', function() {
-            // Cek email user terlebih dahulu
-            checkUserEmail();
-            
             // Cegah pengguna meninggalkan halaman tanpa sengaja
             window.addEventListener('beforeunload', function(e) {
                 if (paymentTimer) {
